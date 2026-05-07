@@ -1,4 +1,4 @@
-function PrintBill() {
+function PrintTableBill() {
   return (
     <div
       id="print-area"
@@ -16,7 +16,7 @@ function PrintBill() {
       {/* BILL INFO */}
       <div className="space-y-0.5">
         <p>Guest: Ram Bahadur</p>
-        <p>Room: 101 | Table: 1</p>
+        <p>Room: 101 </p>
         <p>Date: 2026-05-02 10:30 AM</p>
       </div>
 
@@ -89,4 +89,4 @@ function PrintBill() {
   );
 }
 
-export default PrintBill;
+export default PrintTableBill

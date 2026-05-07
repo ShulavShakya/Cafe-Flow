@@ -1,5 +1,5 @@
-import AdminDashboard from "./sidebar.jsx";
-import Header from "../layouts/header.jsx";
+import AdminDashboard from "../../layouts/sidebar.jsx";
+import Header from "../../layouts/header.jsx";
 import { Outlet } from "react-router-dom";
 
 function DashboardLayout() {

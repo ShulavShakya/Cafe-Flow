@@ -81,6 +81,7 @@ function KitchenOrderTicket({orderSlip, setOrderSlip}) {
                     Create Order
                 </h3>
 
+                {/* Selecting location */}
                 <div className="flex items-center gap-2 font-medium mb-4">
                     Order For:
                     <input type="radio" name="location" value="table"
@@ -94,6 +95,7 @@ function KitchenOrderTicket({orderSlip, setOrderSlip}) {
                     /> Room 
                 </div>
 
+                {/* Number input */}
                 <p className='mb-2 text-[16px]'>{location==="table"?"Table":"Room"} Number:</p>
                 <input
                     type="number"
@@ -106,6 +108,7 @@ function KitchenOrderTicket({orderSlip, setOrderSlip}) {
                     className='border rounded-lg p-2 mb-4'
                 />
 
+                {/* Name input */}
                 <p className='mb-2 text-[16px]'>Guest Name:</p>
                 <input
                     type="text"
@@ -115,6 +118,7 @@ function KitchenOrderTicket({orderSlip, setOrderSlip}) {
                     className='border rounded-lg mb-4 p-2'
                 />
 
+                {/* Customization request */}
                 <p className='mb-2 text-[16px]'>Customization:</p>
                 <textarea
                     placeholder="Food customization request here (optional)"

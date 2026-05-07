@@ -6,7 +6,6 @@ import KitchenOrderTicket from "./kitchenorderticket";
 
 function MenuView() {
 
-  /* For the order slip check the table Number, it should be one of the existing tables and the guest name should appear corredponding to the table number if occupied */
   const [menuItemsData, setMenuItemsData] = useState([
   {id: 1, name: "Espresso", category: "Hot Beverage", price: 120, available: true,},
   {id: 2, name: "Cappuccino", category: "Hot Beverage", price: 150, available: true,},

@@ -118,10 +118,10 @@ return(
             <p className="font-medium text-lg mb-6">
               Do you want to remove {selectedStaff.name} from the system?
             </p>
-            <div className='flex items-center justify-center gap-5'>
+            <div className='flex items-center justify-center gap-4'>
               <button
                 onClick={() => setShowPopUp(false)}
-                className="bg-red-500 hover:bg-red-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
+                className="bg-slate-500 hover:bg-slate-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -130,7 +130,7 @@ return(
                 onClick={() => {setShowPopUp(false);
                   handleDeleteStaff(selectedStaff.id);
                 }}
-                className="bg-slate-500 hover:bg-slate-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
+                className="bg-red-500 hover:bg-red-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
               >
                 Confirm
               </button>

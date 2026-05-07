@@ -12,7 +12,22 @@ function Tables() {
     { id: 1, tableNo: 4, capacity: 2, status: "Available"},
     { id: 2, tableNo: 2, capacity: 4, status: "Available"},
     { id: 3, tableNo: 3, capacity: 4, status: "Available"},
+    { id: 4, tableNo: 1, capacity: 1, status: "Available"},
   ]);
+
+  const changeTableStatus = (id, status) => {
+    setTables(prev =>
+      prev.map(table =>
+        table.id === id
+          ? { ...table, status }
+          : table
+      )
+    );
+  };
+
+  const deleteTable = (id) => {
+    setTables(prev => prev.filter( table=>table.id !== id ))
+  }
   
   return (
     <div className="flex-1 min-h-screen p-8 bg-gray-50">
@@ -100,6 +115,7 @@ function Tables() {
         {/* Table Cards */}
         <TableCard 
           tables={tables} 
+          deleteTable={deleteTable}
           selectedTable={(table) => setSelectedTable(table)}
         />
       </div>
@@ -108,6 +124,7 @@ function Tables() {
       {selectedTable && (
         <StatusForm
           table={selectedTable}
+          changeTableStatus={changeTableStatus}
           close={() => setSelectedTable(null)}
         />
       )} 

@@ -1,26 +1,42 @@
 import { useState } from "react";
 
-function AddUnit({ type, onClose, onConfirm }) {
+function AddRoomForm({close }) {
   const [capacity, setCapacity] = useState("");
-  const [unitNumber, setUnitNumber] = useState("");
+  const [roomNumber, setRoomNumber] = useState("");
   const [msg, setMsg] = useState("");
+
+  const resetForm = () => {
+    setRoomNumber("");
+    setCapacity("");
+    setMsg("");
+    close();
+  }
+  
+  const validateInput = () => {
+    if (!capacity || !roomNumber) {
+      setMsg("Must enter all the fields");
+      return;
+    }
+    //send to backend
+    resetForm();
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
 
       <div className="bg-white p-6 rounded-2xl w-80">
-        <h2 className="text-xl font-bold mb-4">Add New {type === "room" ? "Room" : "Table"}</h2>
+        <h2 className="text-[19px] font-bold mb-4">Add New Room</h2>
 
-        <p className="font-medium mb-2 text-lg text-gray-600">{type === "room" ? "Room" : "Table"} Number</p>
+        <p className="font-medium mb-2 text-[16px] text-gray-600">Room Number</p>
 
         <input
           type="number"
-          value={unitNumber}
-          onChange={(e) => setUnitNumber(e.target.value)}
+          value={roomNumber}
+          onChange={(e) => setRoomNumber(e.target.value)}
           className="w-full border-2 p-2 mb-3 rounded-lg"
         />
         
-        <p className="font-medium mb-2 text-lg text-gray-600">{type === "room" ? "Number of beds" : "Seating Capacity"}</p>
+        <p className="font-medium mb-2 text-[16px] text-gray-600">Number of beds</p>
 
         <input
           type="number"
@@ -34,23 +50,14 @@ function AddUnit({ type, onClose, onConfirm }) {
         <div className="flex justify-between items-center">
 
           <button
-            onClick={onClose}
+            onClick={resetForm}
             className="bg-red-400 text-white font-medium rounded-xl 
             px-3 py-2 hover:bg-red-500">
             Cancel
           </button>
 
           <button
-            onClick={() => {
-              if (!capacity || !unitNumber) {
-                setMsg("Must enter all the fields");
-                return;
-              }
-              onConfirm(type.toLowerCase().trim(), unitNumber, capacity);
-              setUnitNumber("");
-              setCapacity("");
-              setMsg("");
-            }}
+            onClick={validateInput}
             className="px-3 py-2 bg-green-400 text-white font-medium 
             rounded-xl hover:bg-green-500">
             Confirm
@@ -64,4 +71,4 @@ function AddUnit({ type, onClose, onConfirm }) {
   );
 }
 
-export default AddUnit
+export default AddRoomForm

@@ -69,10 +69,10 @@ function SupplierCard({suppliers, deleteSupplier}){
                         <p className="font-medium text-lg mb-6">
                         Do you want to remove supplier {selectedSupplier.name} from the system?
                         </p>
-                        <div className='flex items-center justify-center gap-5'>
+                        <div className='flex items-center justify-center gap-4'>
                         <button
                             onClick={() => setPopUp(false)}
-                            className="bg-red-500 hover:bg-red-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
+                            className="bg-slate-500 hover:bg-slate-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
                         >
                             Cancel
                         </button>
@@ -81,7 +81,7 @@ function SupplierCard({suppliers, deleteSupplier}){
                             onClick={() => {setPopUp(false);
                             deleteSupplier(selectedSupplier.id);
                             }}
-                            className="bg-slate-500 hover:bg-slate-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
+                            className="bg-red-500 hover:bg-red-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg"
                         >
                             Confirm
                         </button>

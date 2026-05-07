@@ -1,30 +1,3 @@
-export const ordersData = [
-  {
-    id: 1,
-    tableNumber: "3",
-    customerName: "John Doe",
-    items: [
-      { name: "Cappuccino", quantity: 2, price: 150 },
-      { name: "Club Sandwich", quantity: 1, price: 280 },
-    ],
-    total: 580,
-    status: "preparing",
-    time: "10:30 AM",
-  },
-  {
-    id: 2,
-    tableNumber: "7",
-    customerName: "Sarah Smith",
-    items: [
-      { name: "Espresso", quantity: 1, price: 120 },
-      { name: "Chocolate Cake", quantity: 2, price: 180 },
-    ],
-    total: 480,
-    status: "preparing",
-    time: "10:25 AM",
-  },
-];
-
 export const revenueData = [
   { name: "Sun", date: "2026-04-19", Revenue: 1200 },
   { name: "Mon", date: "2026-04-20", Revenue: 4300 },
@@ -35,11 +8,11 @@ export const revenueData = [
   { name: "Sat", date: "2026-04-25", Revenue: 4050 },
 ];
 
-export const orderData = [
+export const menuPopularity = [
   { name: 'Food', value: 425 },
   { name: 'Dessert', value: 185 },
   { name: 'Hot Beverage', value: 252 },
   { name: 'Drinks', value: 100 },
 ];
 
-export const COLORS = ['#F59E0B', '#FACC15', '#EAB676','#F6AD55'];
+export const colors = ['#F59E0B', '#FACC15', '#EAB676','#F6AD55'];

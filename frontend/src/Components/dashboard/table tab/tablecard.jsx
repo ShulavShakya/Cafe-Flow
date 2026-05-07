@@ -1,7 +1,7 @@
 import { X, UtensilsCrossed} from "lucide-react";
 import { useState } from "react";
 
-function TableCard({ tables, selectedTable }) {
+function TableCard({ tables, deleteTable, selectedTable }) {
 
     const [deletePopup, setDeletePopup] = useState(null);
 
@@ -60,7 +60,7 @@ function TableCard({ tables, selectedTable }) {
 
                 </div>
 
-                <div className="absolute top-25 -left-6 opacity-0 group-hover:opacity-90 transition-opacity 
+                <div className="absolute top-25 -left-6 opacity-0 z-50 group-hover:opacity-90 transition-opacity 
                 duration-600 border border-gray-200 shadow-sm font-medium bg-gray-100 text-gray-800 text-sm p-2 rounded-lg">
                     {table.status ==="Available" && (
                     <p>This table is available to be assigned to customers.</p>
@@ -94,19 +94,20 @@ function TableCard({ tables, selectedTable }) {
                     Really want to delete Table {deletePopup.tableNo}?
                 </p>
 
-                <div className="flex items-center gap-6"> 
+                <div className="flex items-center gap-4"> 
                     <button
                         onClick={() => setDeletePopup(null)}
-                        className="bg-red-500 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg hover:bg-red-600"
+                        className="bg-gray-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg hover:bg-gray-700"  
                     >
                         Cancel
                     </button>
 
                     <button
-                        /* onClick={() => {setShowPopUp(false);
-                        onDelete(table.id);
-                        }} */
-                        className="bg-gray-600 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg hover:bg-gray-700"
+                        onClick={() => {
+                            deleteTable(deletePopup.id);
+                            setDeletePopup(null);
+                        }}
+                        className="bg-red-500 text-white text-sm mt-1 font-medium px-4 py-2 rounded-lg hover:bg-red-600"
                     >
                         Confirm
                     </button>

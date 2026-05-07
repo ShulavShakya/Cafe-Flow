@@ -1,31 +1,34 @@
 import { Plus } from "lucide-react";
-import AddUnit from "../layouts/addunit.jsx";
-import UnitCard from "../layouts/unitCard.jsx";
-import StatusForm from "../layouts/statusform.jsx";
-import { useState, useContext } from "react";
-import { UnitContext } from "../../context/cafeContext.jsx";
+import AddRoomForm from "./addroomform.jsx";
+import RoomCard from "./roomcard.jsx";
+import RoomStatusForm from "./roomstatusform.jsx";
+import { useState } from "react";
 
 function Rooms() {
   const [showForm, setShowForm] = useState(false);
-  const [activeRoom, setActiveRoom] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  /* const [showPopup, setShowPopup] = useState(false); */
 
-  const { units, addUnit, updateUnit, deleteUnit } = useContext(UnitContext);
+  const [rooms, setRooms] = useState([
+    { id: 1, roomNo: 3, capacity: 2, status: "Available"},
+    { id: 2, roomNo: 2, capacity: 4, status: "Available"},
+    { id: 3, roomNo: 4, capacity: 4, status: "Available"},
+    { id: 4, roomNo: 1, capacity: 1, status: "Available"},
+  ]);
 
-  const handleAddRoom = (type, number, capacity) => {
-    const success = addUnit({
-    type: type,
-    number: number,
-    capacity: capacity,
-    });
-
-    if (!success) {
-        setShowPopup(true);
-    }
+  const changeRoomStatus = (id, status) => {
+    setRooms(prev =>
+      prev.map(room =>
+        room.id === id
+          ? { ...room, status }
+          : room
+      )
+    );
   };
 
-  //for filtering rooms from units
-  const rooms = units.filter((u) => u.type === "room");
+  const deleteRoom = (id) => {
+    setRooms(prev => prev.filter( room=>room.id !== id ))
+  }
 
   return (
     <div className="flex-1 min-h-screen p-8 bg-gray-50">
@@ -83,30 +86,14 @@ function Rooms() {
 
       {/* Room Info Form */}
       {showForm && (
-        <AddUnit
-          type="room"
-          onClose={() => setShowForm(false)}
-          onConfirm={(type, number, capacity) => {
-          handleAddRoom(type, number, capacity);
-          setShowForm(false);
-          }}
+        <AddRoomForm
+          close={() => setShowForm(false)}
         />
       )}
 
-      {/* Status Inquiry Form */}
-      {activeRoom && (
-        <StatusForm
-          unit={activeRoom}
-          onClose={() => setActiveRoom(null)}
-          onConfirm={(status, customerName) => {
-          updateUnit(activeRoom.id, status, customerName);
-          setActiveRoom(null);
-          }}
-        />
-      )}
-
-      {/* Room List */}
       <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
+
+        {/* Title and index */}
         <div className="flex items-center gap-15 justify-between mb-12">
           <h3 className="font-bold text-[16px] md:text-[19px]">
             All rooms
@@ -134,28 +121,25 @@ function Rooms() {
             </div>
           </div>
         </div>
-
-        <div className="flex flex-wrap gap-5">
-          {rooms.length === 0 ? (
-            <div className='text-gray-500 font-medium w-full text-center text-lg p-4 mb-3'>
-              No rooms added yet
-            </div>
-          ) : (
-            [...rooms]
-            .sort((a, b) => a.number - b.number)
-            .map((room) => (
-              <UnitCard
-                key={room.id}
-                unit={room}
-                onDelete={()=>deleteUnit(room.id)}
-                openStatusForm={() => setActiveRoom(room)}
-              />
-            ))
-          )}
-        </div>
+        
+        {/* Room Cards */}
+        <RoomCard
+          rooms={rooms}
+          deleteRoom={deleteRoom}
+          selectedRoom={(room) => setSelectedRoom(room)}
+        />   
       </div>
+
+      {/* Status Update Form */}
+      {selectedRoom && (
+        <RoomStatusForm
+          room={selectedRoom}
+          changeRoomStatus={changeRoomStatus}
+          close={() => setSelectedRoom(null)}
+        />
+      )}
       
-      {showPopup && (
+     {/*  {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
           <div className="bg-white p-5 rounded-xl shadow-lg text-center h-40 w-80 flex flex-col items-center justify-center">
             <p className="font-medium text-lg mb-6">
@@ -169,7 +153,7 @@ function Rooms() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     
     </div>
   );

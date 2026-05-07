@@ -2,12 +2,12 @@ import { Routes, Route } from "react-router-dom";
 import LoginScreen from "./pages/auth/loginScreen.jsx";
 import Signup from "./pages/auth/signup.jsx";
 import Staff from "./Components/dashboard/staff tab/staffmain.jsx";
-import AdminDashboard from "./Components/dashboard/sidebar.jsx";
-import DashboardLayout from "./Components/dashboard/layout.jsx";
-import Overview from "./Components/dashboard/overview.jsx";
-import OrdersView from "./Components/dashboard/orders.jsx";
+import AdminDashboard from "./Components/layouts/sidebar.jsx";
+import DashboardLayout from "./Components/dashboard/default layout/layout.jsx";
+import Overview from "./Components/dashboard/dashboard overview/overview.jsx";
+import OrdersView from "./Components/dashboard/orders tab/orders.jsx";
 import Tables from "./Components/dashboard/table tab/tables.jsx";
-import Rooms from "./Components/dashboard/room.jsx";
+import Rooms from "./Components/dashboard/room tab/room.jsx";
 import Inventory from "./Components/dashboard/inventory tab/inventory.jsx";
 import Finance from "./Components/dashboard/finance tab/finance.jsx";
 import MenuView from "./Components/dashboard/menu tab/menu.jsx"

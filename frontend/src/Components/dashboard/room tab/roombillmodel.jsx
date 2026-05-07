@@ -4,7 +4,7 @@ import PrintBill from "./printablebill";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-function Bill({onClose})
+function Bill({close})
 {
     const [discount, setDiscount]=useState(0);
     const [paymentMethod, setPaymentMethod]=useState("");
@@ -37,7 +37,7 @@ function Bill({onClose})
             <div className="flex items-center justify-between p-5 border-b border-gray-100">
               <h3>Generate Bill</h3>
               <button
-                onClick={onClose}
+                onClick={close}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <X className="w-5 h-5" />
