@@ -1,34 +1,82 @@
-import { useContext, useState } from "react";
-import { Plus, Minus,} from "lucide-react";
-import NewItemForm from './newitemform';
+import { useState } from "react";
+import { Plus, Minus } from "lucide-react";
+import NewItemForm from "./newitemform";
 import MenuItemCard from "./menuitemcard";
 import KitchenOrderTicket from "./kitchenorderticket";
 
 function MenuView() {
-
   const [menuItemsData, setMenuItemsData] = useState([
-  {id: 1, name: "Espresso", category: "Hot Beverage", price: 120, available: true,},
-  {id: 2, name: "Cappuccino", category: "Hot Beverage", price: 150, available: true,},
-  {id: 3, name: "Club Sandwich", category: "Food", price: 280, available: true,},
-  {id: 4, name: "Pasta Carbonara", category: "Food", price: 320, available: true,},
-  {id: 5, name: "Burger", category: "Food", price: 300, available: true },
-  {id: 6, name: "Sprite", category: "Soft Drinks", price: 100, available: true },
-  {id: 7, name: "Cheesecake", category: "Dessert", price: 200, available: true,},
-  {id: 8, name: "Whisky", category: "Hard Drinks", price: 200, available: true,}]);
-  
-  
+    {
+      id: 1,
+      name: "Espresso",
+      category: "Hot Beverage",
+      price: 120,
+      available: true,
+    },
+    {
+      id: 2,
+      name: "Cappuccino",
+      category: "Hot Beverage",
+      price: 150,
+      available: true,
+    },
+    {
+      id: 3,
+      name: "Club Sandwich",
+      category: "Food",
+      price: 280,
+      available: true,
+    },
+    {
+      id: 4,
+      name: "Pasta Carbonara",
+      category: "Food",
+      price: 320,
+      available: true,
+    },
+    { id: 5, name: "Burger", category: "Food", price: 300, available: true },
+    {
+      id: 6,
+      name: "Sprite",
+      category: "Soft Drinks",
+      price: 100,
+      available: true,
+    },
+    {
+      id: 7,
+      name: "Cheesecake",
+      category: "Dessert",
+      price: 200,
+      available: true,
+    },
+    {
+      id: 8,
+      name: "Whisky",
+      category: "Hard Drinks",
+      price: 200,
+      available: true,
+    },
+  ]);
+
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const categories = ["All", "Food", "Dessert", "Hot Beverage", "Soft Drinks", "Hard Drinks"];
+  const categories = [
+    "All",
+    "Food",
+    "Dessert",
+    "Hot Beverage",
+    "Soft Drinks",
+    "Hard Drinks",
+  ];
 
   const [orderSlip, setOrderSlip] = useState([]);
 
   const toggleItemAvailability = (id) => {
     setMenuItemsData(
       menuItemsData.map((item) =>
-        item.id === id ? { ...item, available: !item.available } : item
-      )
+        item.id === id ? { ...item, available: !item.available } : item,
+      ),
     );
   };
 
@@ -37,11 +85,9 @@ function MenuView() {
   };
 
   const filteredItems =
-  selectedCategory === "All"
-    ? menuItemsData
-    : menuItemsData.filter(
-        (item) => item.category === selectedCategory
-      );
+    selectedCategory === "All"
+      ? menuItemsData
+      : menuItemsData.filter((item) => item.category === selectedCategory);
 
   return (
     <div className="flex-1 bg-gray-50 min-h-screen p-8">
@@ -70,7 +116,8 @@ function MenuView() {
       <div className="mb-6 flex gap-3 w-full overflow-x-auto scrollbar-hide p-1">
         {/* Menu item categories */}
         {categories.map((category) => (
-          <button key={category}
+          <button
+            key={category}
             onClick={() => setSelectedCategory(category)}
             className={`px-3 py-2 rounded-lg font-medium shadow-sm text-[16px] ${
               selectedCategory === category
@@ -87,25 +134,19 @@ function MenuView() {
         menuItemsData={filteredItems}
         toggleAvailability={toggleItemAvailability}
         deleteItem={handleDeleteItem}
-        addToOrder={(item)=>setOrderSlip([...orderSlip,item])}
+        addToOrder={(item) => setOrderSlip([...orderSlip, item])}
       />
-          
 
       {/* Order Placing */}
-      <KitchenOrderTicket 
-        orderSlip={orderSlip}
-        setOrderSlip={setOrderSlip}
-      />
-      
+      <KitchenOrderTicket orderSlip={orderSlip} setOrderSlip={setOrderSlip} />
 
       {/* Adding new item */}
-      {showAddModal &&
+      {showAddModal && (
         <NewItemForm
-          close={()=>setShowAddModal(false)}
+          close={() => setShowAddModal(false)}
           categories={categories}
         />
-      }
-      
+      )}
     </div>
   );
 }
