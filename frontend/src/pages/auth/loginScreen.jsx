@@ -86,18 +86,6 @@ function LoginScreen() {
         >
           Login
         </button>
-        <hr className="mt-6 " />
-        <div className="flex flex-col items-center mt-6 gap-3 mb-1">
-          <p className="text-black font-medium">
-            Don't have an account? Sign up
-          </p>
-          <button
-            onClick={() => navigate("/signup")}
-            className="inline-flex px-4 py-1.5 text-lg font-medium items-center justify-center bg-transparent text-[#4B2E2A] rounded-lg hover:bg-[#ccc0be] hover:text-[#4B2E2A] border-2 border-[#4B2E2A]"
-          >
-            Sign up
-          </button>
-        </div>
       </div>
     </div>
   );

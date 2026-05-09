@@ -120,7 +120,7 @@ return(
                     Reservation Details
                 </h1>
                 <p className="text-sm md:text-[15px] text-gray-400 font-medium mt-1">
-                    View ans Manage details of customers reserving rooms/tables
+                    View and Manage details of customers reserving rooms/tables
                 </p>
             </div>
             <div className="flex items-center justify-center">

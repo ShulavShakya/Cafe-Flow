@@ -1,5 +1,6 @@
-import { SquarePen, Trash2, UserCog } from 'lucide-react';
+import { Plus, SquarePen, Trash2, UserCog } from 'lucide-react';
 import { useState } from 'react';
+import AddStaffForm from './addstaffform';
 import StaffTable from "./stafftable";
 function Staff(){
 
@@ -8,12 +9,13 @@ function Staff(){
   const [msg,setMsg]=useState("");
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [showPopUp, setShowPopUp] = useState(false);
+  const [showAddStaffForm, setShowAddStaffForm] = useState(false);
 
   // Initial data
   const [staff, setStaff] = useState([
-    { id: 1, name: "Ram Sharma", jobTitle: "Receptionist",  contact: "9872344678", salary:0 },
-    { id: 2, name: "Sita Gurung", jobTitle: "Manager",  contact: "9862345478", salary:0 },
-    { id: 3, name: "Hari Thapa", jobTitle: "Cleaner",contact: "9712343678", salary:0 },
+    { id: 1, name: "Ram Sharma", roleName: "Receptionist",  contact: "9872344678", salary:0, address:"Putaliline, Dharan" },
+    { id: 2, name: "Sita Gurung", roleName: "Manager",  contact: "9862345478", salary:0, address:"Putaliline, Dharan" },
+    { id: 3, name: "Hari Thapa", roleName: "Cleaner",contact: "9712343678", salary:0, address:"Putaliline, Dharan" },
   ]);
 
   // Stats
@@ -51,14 +53,25 @@ return(
   <div className="flex-1 bg-gray-50 p-8 min-h-screen">
       
     {/* Header */}
-    <div className="mb-6">
-      <h1 className="text-xl md:text-2xl font-bold">
-        Staff Management
-      </h1>
-      <p className="text-sm md:text-[15px] text-gray-400 font-medium mt-1">
-        View and Manage all staffs and their payroll information
-      </p>
-    </div>
+   <div className="flex items-center justify-between mb-6">
+            <div>
+                <h1 className="text-xl md:text-2xl font-bold">
+                    Staff Details
+                </h1>
+                <p className="text-sm md:text-[15px] text-gray-400 font-medium mt-1">
+                    View and Manage all staffs and their payroll information
+                </p>
+            </div>
+            <div className="flex items-center justify-center">
+                <button
+                    onClick={() => setShowAddStaffForm(true)}
+                    className="bg-blue-600 text-white px-3 py-2 rounded-lg flex items-center
+                    gap-1 hover:bg-blue-700">
+                    <Plus className="w-5 h-5" />
+                    <p className="font-medium text-sm md:text-[16px]">Add Staff</p>
+                </button>
+            </div>
+        </div>
 
     {/* Stats */}
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -72,6 +85,13 @@ return(
         <p className="text-blue-900 text-[17px]">Rs {totalPayroll.toLocaleString()}</p>
       </div>
     </div>
+
+    {/* Add Staff Form */}
+    {showAddStaffForm && (
+      <AddStaffForm
+        close={()=>setShowAddStaffForm(false)}
+      />
+    )}
 
     {/* Staff Table */}
     <StaffTable

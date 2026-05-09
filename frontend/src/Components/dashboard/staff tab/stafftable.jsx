@@ -33,13 +33,16 @@ function StaffTable({
                 Name
               </th>
               <th className="px-6 py-3 text-left text-gray-600 font-medium text-[15px]">
-                Job title
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-gray-600 font-medium text-[15px] ">
+                Salary
               </th>
               <th className="px-6 py-3 text-left text-gray-600 font-medium text-[15px]">
                 Contact
               </th>
-              <th className="px-6 py-3 text-left text-gray-600 font-medium text-[15px] ">
-                Salary
+              <th className="px-6 py-3 text-left text-gray-600 font-medium text-[15px]">
+                Address
               </th>
               <th className="px-6 py-3 text-left text-gray-600 font-medium text-[15px]">
                 Action
@@ -57,10 +60,7 @@ function StaffTable({
                   {member.name}
                 </td>
                 <td className="px-6 py-3 text-gray-600 text-[15px]">
-                  {member.jobTitle}
-                </td>
-                <td className="px-6 py-3 text-gray-600 text-[15px]">
-                  {member.contact}
+                  {member.roleName}
                 </td>
                 <td className="px-6 py-3 flex justify-between items-center text-gray-600 text-[15px]"> 
                   <p>Rs {member.salary.toLocaleString()}</p>
@@ -71,6 +71,12 @@ function StaffTable({
                       setEditSalary(true);
                     }}
                   className='w-4 h-4 text-red-400 hover:text-red-500'/>
+                </td>
+                <td className="px-6 py-3 text-gray-600 text-[15px]">
+                  {member.contact}
+                </td>
+                <td className="px-6 py-3 text-gray-600 text-[15px]">
+                  {member.address}
                 </td>
                 <td className="px-6 py-3">
                   <button 

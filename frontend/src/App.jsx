@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import LoginScreen from "./pages/auth/loginScreen.jsx";
-import Signup from "./pages/auth/signup.jsx";
 import Staff from "./Components/dashboard/staff tab/staffmain.jsx";
 import AdminDashboard from "./Components/layouts/sidebar.jsx";
 import DashboardLayout from "./Components/dashboard/default layout/layout.jsx";
@@ -21,7 +20,6 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
 
         <Route path="/login" element={<LoginScreen />} />
-        <Route path="/signup" element={<Signup />} />
 
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Navigate to="overview" replace />} />

@@ -100,6 +100,7 @@ function OrdersView() {
       {view==="waiter" && (
         <WaiterOrders 
           waiterOrders={waiterOrders}
+          setOrdersData={setOrdersData}
           onCancel={cancelOrder}
           changeStatus={changeStatus}
         />

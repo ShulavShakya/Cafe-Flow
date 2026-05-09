@@ -1,8 +1,10 @@
 import { useState } from "react";
 import OrderCard from "./ordercard";
 import { ChefHat } from "lucide-react";
+import TableOrderBill from "./tableorderbill";
 
-function WaiterOrders({ waiterOrders, onCancel, changeStatus }) {
+function WaiterOrders({ waiterOrders, setOrdersData, onCancel, changeStatus }) {
+    const [billModal, setBillModal] = useState(null);
 
     const sortedWaiterOrders = [...waiterOrders].sort((o1, o2) => {
     const priority = (status) => {
@@ -10,9 +12,35 @@ function WaiterOrders({ waiterOrders, onCancel, changeStatus }) {
         if (status === "preparing") return 1;
         return 2;
     };
-
     return priority(o1.status) - priority(o2.status);
     });
+
+   const openTableBill = (tableNumber) => {
+    const tableOrders = waiterOrders.filter(
+        o =>
+        o.locationType === "table" &&
+        o.tableNumber === tableNumber &&
+        o.status === "prepared"
+    );
+
+    const total = tableOrders.reduce((sum, o) => sum + o.total, 0);
+
+    setBillModal({
+        tableNumber,
+        orders: tableOrders,
+        total
+    });
+    };
+
+    const markOrdersCompleted = (orders) => {
+    setOrdersData(prev =>
+        prev.map(order =>
+        orders.some(o => o.id === order.id)
+            ? { ...order, status: "completed" }
+            : order
+        )
+    );
+    };
 
     return(
     <div className="flex-1 min-h-screen bg-gray-50 p-4 lg:p-6">
@@ -35,12 +63,21 @@ function WaiterOrders({ waiterOrders, onCancel, changeStatus }) {
                     view="waiter"
                     onCancel={onCancel}
                     changeStatus={changeStatus}
+                    openTableBill={openTableBill}
                 />
             ))}
             </div>
         )}
 
         {/* Bill & Payment Modal */}
+        {billModal && (
+        <TableOrderBill
+            selectedOrder={billModal}
+            changeStatus={changeStatus}
+            close={() => setBillModal(null)}
+            completeTableOrders={markOrdersCompleted}
+        />
+        )}
     </div>
     )
 }
