@@ -8,11 +8,6 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [discount, setDiscount] = useState(0);
 
-    const subtotal = (selectedOrder.total).toFixed(2);
-
-    const finalAmount =
-      (subtotal - (subtotal * discount) / 100).toFixed(2);
-
     //MERGE ITEMS
     const merged = {};
 
@@ -27,6 +22,16 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
     });
 
     const items = Object.values(merged);
+
+    const subtotal = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    const discountAmount = (subtotal * discount) / 100;
+
+    const finalAmount =
+      (subtotal - discountAmount);
 
     const handlePayment = () => {
       completeTableOrders(selectedOrder.tableNumber);
@@ -76,7 +81,7 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 text-sm">Subtotal</span>
                   <span className="text-gray-900">
-                    Rs {subtotal}
+                    Rs {subtotal.toFixed(2)}
                   </span>
                 </div>
 
@@ -103,7 +108,7 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
                     <span>Discount ({discount}%)</span>
                     <span>
                       − Rs{" "}
-                      {((subtotal * discount) / 100).toFixed(2)}
+                      {discountAmount.toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -111,7 +116,7 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
                 <div className="flex items-center justify-between border-t border-gray-200 pt-2">
                   <span className="text-gray-900">Final Amount</span>
                   <span className="text-red-500">
-                    Rs {finalAmount}
+                    Rs {finalAmount.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -168,7 +173,7 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
                   <p className="text-purple-700 text-sm">
                     Amount to collect: {" "}
                     <span className="text-purple-900">
-                      Rs {finalAmount}
+                      Rs {finalAmount.toFixed(2)}
                     </span>
                   </p>
                 </div>
@@ -207,8 +212,12 @@ function TableOrderBill({selectedOrder, close, completeTableOrders}) {
         )}
 
         <PrintTableBill
-          selectedOrder={selectedOrder}
-          discount={discount}
+          items={items}
+          subtotal={subtotal}
+          discountAmount={discountAmount}
+          finalAmount={finalAmount}
+          tableNumber={selectedOrder.tableNumber}
+          /* customerName={selectedOrder.customerName} */
           paymentMethod={paymentMethod}
         />
       </div>

@@ -23,12 +23,9 @@ function WaiterOrders({ waiterOrders, setOrdersData, onCancel, changeStatus }) {
         o.status === "prepared"
     );
 
-    const total = tableOrders.reduce((sum, o) => sum + o.total, 0);
-
     setBillModal({
         tableNumber,
         orders: tableOrders,
-        total
     });
     };
 
