@@ -4,65 +4,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "../utils/prisma.js";
 
-export const register = async (req, res, next) => {
-  try {
-    const { full_name, email, password, phone, role_name } = req.body;
-
-    if (!full_name || !email || !password) {
-      return res
-        .status(400)
-        .json({ message: "full_name, email and password are required" });
-    }
-
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return res.status(409).json({ message: "Email already in use" });
-    }
-
-    const role = await prisma.role.findUnique({
-      where: { role_name: role_name || "staff" },
-    });
-    if (!role) {
-      return res
-        .status(400)
-        .json({ message: `Role '${role_name}' does not exist` });
-    }
-
-    const hashedPass = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: {
-        full_name,
-        email,
-        password: hashedPass,
-        phone: phone || null,
-        status: "active",
-        role: {
-          connect: { role_name: role.role_name },
-        },
-      },
-      select: {
-        user_id: true,
-        full_name: true,
-        email: true,
-        phone: true,
-        status: true,
-        created_at: true,
-        role: {
-          select: { role_name: true },
-        },
-      },
-    });
-
-    return res.status(201).json({
-      message: "User registered successfully",
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;

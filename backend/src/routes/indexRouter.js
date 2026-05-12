@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRouter from "./authRouter.js";
+import userRouter from "./userRouter.js";
 import rolesRouter from "./rolesRoute.js";
 import guestRouter from "./guestsRouter.js";
 import roomRouter from "./roomsRouter.js";
@@ -11,6 +12,7 @@ import foodOrdersRouter from "./foodOrdersRouter.js";
 const router = Router();
 
 router.use("/auth", authRouter);
+router.use("/staff", userRouter);
 router.use("/roles", rolesRouter);
 router.use("/guests", guestRouter);
 router.use("/rooms", roomRouter);
