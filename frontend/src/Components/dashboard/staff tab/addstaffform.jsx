@@ -1,5 +1,6 @@
 import { UserRoundPlus, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { publicAPI, privateAPI } from "../../../auth/config/api.js";
 
 function AddStaffForm({ close }) {
   const roles = ["Manager", "Reception", "Kitchen", "Waiter"];
@@ -12,6 +13,7 @@ function AddStaffForm({ close }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const resetForm = () => {
     setMsg("");
@@ -48,8 +50,6 @@ function AddStaffForm({ close }) {
       setMsg("Full name can only contain letters and spaces");
       return;
     }
-
-    // Contact number validation
     if (!contactRegex.test(contact)) {
       setMsg("Invalid contact number");
       return;
