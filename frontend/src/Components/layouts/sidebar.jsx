@@ -16,19 +16,22 @@ import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 
 function AdminDashboard({ open, setOpen }) {
+  const adminMenu = [
+    { id: "overview", label: "Dashboard", icon: LayoutDashboard },
+    { id: "orders", label: "Orders", icon: ShoppingCart },
+    { id: "menu", label: "Menu", icon: NotepadText },
+    { id: "tables", label: "Tables", icon: MdTableRestaurant },
+    { id: "rooms", label: "Rooms", icon: BedSingle },
+    { id: "reservations", label: "Reservations", icon: BookMarked },
+    { id: "finance", label: "Finance", icon: Coins },
+    { id: "staff", label: "Staff", icon: UserCog },
+    { id: "inventory", label: "Inventory", icon: Package },
+    { id: "history", label: "History", icon: History },
+  ];
   const menuByRole = {
-    admin: [
-      { id: "overview", label: "Dashboard", icon: LayoutDashboard },
-      { id: "orders", label: "Orders", icon: ShoppingCart },
-      { id: "menu", label: "Menu", icon: NotepadText },
-      { id: "tables", label: "Tables", icon: MdTableRestaurant },
-      { id: "rooms", label: "Rooms", icon: BedSingle },
-      { id: "reservations", label: "Reservations", icon: BookMarked },
-      { id: "finance", label: "Finance", icon: Coins },
-      { id: "staff", label: "Staff", icon: UserCog },
-      { id: "inventory", label: "Inventory", icon: Package },
-      { id: "history", label: "History", icon: History },
-    ],
+    admin: adminMenu,
+
+    manager: adminMenu,
 
     waiter: [
       { id: "orders", label: "Orders", icon: ShoppingCart },
@@ -36,7 +39,14 @@ function AdminDashboard({ open, setOpen }) {
       { id: "tables", label: "Tables", icon: MdTableRestaurant },
     ],
 
+    kitchen: [
+      { id: "orders", label: "Orders", icon: ShoppingCart },
+      { id: "menu", label: "Menu", icon: NotepadText },
+    ],
+
     receptionist: [
+      { id: "orders", label: "Orders", icon: ShoppingCart },
+      { id: "tables", label: "Tables", icon: MdTableRestaurant },
       { id: "rooms", label: "Rooms", icon: BedSingle },
       { id: "reservations", label: "Reservations", icon: BookMarked },
     ],

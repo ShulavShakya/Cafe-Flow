@@ -6,17 +6,23 @@ import { useOrders } from "../../../hooks/useorder";
 import Cookies from "js-cookie";
 
 function OrdersView() {
-  const { ordersData, setOrdersData, changeStatus } = useOrders();
+  const {
+    ordersData,
+    setOrdersData,
+    changeStatus,
+    kitchenOrders,
+    completedOrders,
+  } = useOrders();
+  
   //on cancel just give an alert and delete order
   const [view, setView] = useState("kitchen"); //kitchen or waiter
   const user = JSON.parse(Cookies.get("user") || "{}");
   const role = user?.role?.role_name || role;
 
-  const kitchenOrders = ordersData.filter((o) => o.status === "preparing");
   const waiterOrders = ordersData.filter(
     (o) => o.status === "preparing" || o.status === "prepared",
   );
-  const completedOrders = ordersData.filter((o) => o.status === "completed");
+
   const deliveredOrders = ordersData.filter((o) => o.status === "delivered");
   const cancelledOrders = ordersData.filter((o) => o.status === "cancelled");
 

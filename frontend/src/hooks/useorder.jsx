@@ -119,11 +119,16 @@ export function useOrders() {
 
   const menuPopularity = getMenuPopularity(ordersData);
 
+  const completedOrders = ordersData.filter((o) => o.status === "completed");
+
+  const kitchenOrders = ordersData.filter((o) => o.status === "preparing");
   return {
     ordersData,
     setOrdersData,
     changeStatus,
     completeRoomOrders,
     menuPopularity,
+    completedOrders,
+    kitchenOrders,
   };
 }
