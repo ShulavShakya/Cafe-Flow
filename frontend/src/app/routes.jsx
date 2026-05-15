@@ -1,5 +1,4 @@
 import LoginScreen from "../Components/shared/loginScreen.jsx";
-import Signup from "../Components/shared/signup.jsx";
 import Staff from "../Components/dashboard/staff tab/staffmain.jsx";
 import AdminDashboard from "../Components/layouts/sidebar.jsx";
 import DashboardLayout from "../Components/dashboard/default layout/layout.jsx";
@@ -16,18 +15,23 @@ import { Navigate } from "react-router-dom";
 import ProtectedRoute from "../auth/protectedRoute.jsx";
 
 export default [
+  {
+    path: "/",
+    element: <Navigate to="/login" replace />,
+  },
+
   { path: "/login", element: <LoginScreen /> },
 
   //admin route
   {
-    path: "/dashboard",
+    path: "/admin",
     element: (
       <ProtectedRoute allowedRoles={["admin"]}>
         <DashboardLayout />
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <overview /> },
+      { index: true, element: <Overview /> },
       {
         path: "overview",
         element: <Overview />,
@@ -69,5 +73,46 @@ export default [
         element: <History />,
       },
     ],
+  },
+
+  //waiter route
+  {
+    path: "/waiter",
+    element: (
+      <ProtectedRoute allowedRoles={["waiter"]}>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+
+    children: [
+      { index: true, element: <Navigate to="orders" replace /> },
+
+      { path: "orders", element: <OrdersView /> },
+      { path: "menu", element: <MenuView /> },
+      { path: "tables", element: <Tables /> },
+    ],
+  },
+
+  // receptionist route
+  {
+    path: "/receptionist",
+    element: (
+      <ProtectedRoute allowedRoles={["receptionist"]}>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+
+    children: [
+      { index: true, element: <Navigate to="rooms" replace /> },
+
+      { path: "rooms", element: <Rooms /> },
+      { path: "reservations", element: <Reservations /> },
+    ],
+  },
+
+  //  Fallback route
+  {
+    path: "*",
+    element: <h1>404 Page Not Found</h1>,
   },
 ];

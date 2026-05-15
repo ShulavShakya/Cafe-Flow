@@ -13,10 +13,9 @@ import {
 import { MdTableRestaurant } from "react-icons/md";
 import logo from "../../assets/images/kitchen_pulse.png";
 import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
 
-function AdminDashboard({open, setOpen}) {
-  const isAdmin = "admin";
-
+function AdminDashboard({ open, setOpen }) {
   const adminMenu = [
     { id: "overview", label: "Dashboard", icon: LayoutDashboard },
     { id: "orders", label: "Orders", icon: ShoppingCart },
@@ -29,17 +28,35 @@ function AdminDashboard({open, setOpen}) {
     { id: "inventory", label: "Inventory", icon: Package },
     { id: "history", label: "History", icon: History },
   ];
+  const menuByRole = {
+    admin: adminMenu,
 
-  const userMenu = [
-    { id: "orders", label: "Orders", icon: ShoppingCart },
-    { id: "menu", label: "Menu", icon: NotepadText },
-    { id: "tables", label: "Tables", icon: MdTableRestaurant },
-    { id: "rooms", label: "Rooms", icon: BedSingle },
-    { id: "reservations", label: "Reservations", icon: BookMarked },
-    { id: "inventory", label: "Inventory", icon: Package },
-  ];
+    manager: adminMenu,
 
-  const menu = isAdmin ? adminMenu : userMenu;
+    waiter: [
+      { id: "orders", label: "Orders", icon: ShoppingCart },
+      { id: "menu", label: "Menu", icon: NotepadText },
+      { id: "tables", label: "Tables", icon: MdTableRestaurant },
+    ],
+
+    kitchen: [
+      { id: "orders", label: "Orders", icon: ShoppingCart },
+      { id: "menu", label: "Menu", icon: NotepadText },
+    ],
+
+    receptionist: [
+      { id: "orders", label: "Orders", icon: ShoppingCart },
+      { id: "tables", label: "Tables", icon: MdTableRestaurant },
+      { id: "rooms", label: "Rooms", icon: BedSingle },
+      { id: "reservations", label: "Reservations", icon: BookMarked },
+    ],
+  };
+
+  const user = JSON.parse(Cookies.get("user") || "{}");
+
+  const role = user?.role?.role_name || role;
+  const email = user?.email || "";
+  const menu = menuByRole[role] || [];
 
   return (
     <div
@@ -47,7 +64,6 @@ function AdminDashboard({open, setOpen}) {
       transform transition-transform duration-300 overflow-y-auto scrollbar-hide
       ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
     >
-
       {/* Header */}
       <div className="sticky top-0 z-50 flex border-b bg-white border-gray-200 p-4 justify-between">
         <div className="flex items-center gap-3 ">
@@ -61,18 +77,17 @@ function AdminDashboard({open, setOpen}) {
 
           <div>
             <h2 className="text-gray-900 text-[17px] md:text-xl font-semibold">
-              Manager
+              {role?.toUpperCase()}
             </h2>
             <p className="text-gray-600 text-xs md:text-sm p-0.5 font-medium">
-              Welcome back
+              {email}
             </p>
           </div>
         </div>
-
         {/* Close button (mobile only) */}
         <div className="md:hidden flex justify-end p-3">
           <button onClick={() => setOpen(false)}>
-            <X className="w-5 h-5"/>
+            <X className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -86,8 +101,8 @@ function AdminDashboard({open, setOpen}) {
             <NavLink
               key={item.id}
               onClick={() => setOpen(false)}
-              to={`/dashboard/${item.id.toLowerCase().trim()}`}
-              end={item.id === ""} // for dashboard root
+              to={`/${role}/${item.id.toLowerCase().trim()}`}
+              end={item.id === "overview"} // for dashboard root
               className={({ isActive }) =>
                 `w-full flex items-center gap-3 p-3 rounded-lg transition ${
                   isActive
@@ -106,4 +121,4 @@ function AdminDashboard({open, setOpen}) {
   );
 }
 
-export default AdminDashboard
+export default AdminDashboard;

@@ -1,4 +1,4 @@
-function PrintTableBill({ selectedOrder, discount, paymentMethod }) {
+function PrintTableBill({ items, tableNumber, subtotal, discountAmount, paymentMethod, finalAmount }) {
   const currentDateTime = new Date().toLocaleString("en-CA", {
     year: "numeric",
     month: "2-digit",
@@ -7,15 +7,6 @@ function PrintTableBill({ selectedOrder, discount, paymentMethod }) {
     minute: "2-digit",
     hour12: true,
   });
-
-  const subtotal = selectedOrder.items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-
-  const discountAmount = (subtotal * discount) / 100;
-
-  const finalAmount = subtotal - discountAmount;
 
   return (
     <div
@@ -35,8 +26,8 @@ function PrintTableBill({ selectedOrder, discount, paymentMethod }) {
 
       {/* BILL INFO */}
       <div className="space-y-0.5">
-        <p>Name: {selectedOrder.customerName}</p>
-        <p>Table: {selectedOrder.tableNumber}</p>
+        <p>Name: Name Here</p>
+        <p>Table: {tableNumber}</p>
         <p>Date: {currentDateTime}</p>
       </div>
 
@@ -48,7 +39,7 @@ function PrintTableBill({ selectedOrder, discount, paymentMethod }) {
       <div className="space-y-2">
         <p className="font-bold mt-1">Ordered Items</p>
 
-        {selectedOrder.items.map((item, index) => (
+        {items.map((item, index) => (
           <div key={index} className="flex justify-between gap-2">
             <p className="max-w-[45mm]">
               {item.name}
@@ -60,6 +51,7 @@ function PrintTableBill({ selectedOrder, discount, paymentMethod }) {
             </p>
           </div>
         ))}
+
       </div>
 
       <p className="text-center my-1">
@@ -70,17 +62,17 @@ function PrintTableBill({ selectedOrder, discount, paymentMethod }) {
       <div className="space-y-1">
         <div className="flex justify-between">
           <p>Subtotal</p>
-          <p>Rs {subtotal}</p>
+          <p>Rs {subtotal.toFixed(2)}</p>
         </div>
 
         <div className="flex justify-between">
           <p>Discount</p>
-          <p>Rs {discountAmount}</p>
+          <p>Rs {discountAmount.toFixed(2)}</p>
         </div>
 
         <div className="flex justify-between font-bold text-[13px]">
           <p>Total</p>
-          <p>Rs {finalAmount}</p>
+          <p>Rs {finalAmount.toFixed(2)}</p>
         </div>
       </div>
 

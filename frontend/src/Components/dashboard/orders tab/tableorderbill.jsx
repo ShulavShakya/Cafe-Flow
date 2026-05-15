@@ -2,22 +2,45 @@ import { Percent, QrCode, Banknote, X } from "lucide-react";
 import { useState } from "react";
 import PrintTableBill from "./printtablebill";
 
-function TableOrderBill({selectedOrder, changeStatus, close}) {
+function TableOrderBill({selectedOrder, close, completeTableOrders}) {
 
     const [showQR, setShowQR] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [discount, setDiscount] = useState(0);
+    const [confirmPayment, setConfirmPayment] = useState(false);
 
-    const calculateFinalAmount = (total, discount) => {
-      return total - ((total * discount) / 100);
-    };
+    //MERGE ITEMS
+    const merged = {};
 
-    const handlePrint = () => {
+    selectedOrder.orders.forEach((order) => {
+      order.items.forEach((item) => {
+        if (!merged[item.name]) {
+          merged[item.name] = { ...item };
+        } else {
+          merged[item.name].quantity += item.quantity;
+        }
+      });
+    });
+
+    const items = Object.values(merged);
+
+    const subtotal = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    const discountAmount = (subtotal * discount) / 100;
+
+    const finalAmount =
+      (subtotal - discountAmount);
+
+    const handlePayment = () => {
       window.print();
+      setConfirmPayment(true);
     };
     
     return(
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
           {/* Header */}
           <div className="flex items-center justify-between p-5 border-b border-gray-100">
@@ -34,23 +57,23 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
             {/* Order summary */}
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-gray-500 text-sm border-b border-gray-200 pb-2 mb-1">
-                Order #{selectedOrder.id}
-              </p>
-              <p className="text-gray-900 mb-3">
                 Table {selectedOrder.tableNumber} — {" "}
-                {selectedOrder.customerName}
+                customerName here
               </p>
 
               <div className="space-y-2 mb-3">
-                {selectedOrder.items.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between text-[15.5px]">
-                    <span className="text-gray-700">
-                      {item.name} × {item.quantity}
-                    </span>
-                    <span className="text-gray-700">
-                      Rs {item.price * item.quantity}
-                    </span>
-                  </div>
+                <p className="text-gray-700 ">
+                  Ordered Items:
+                </p>
+                {items.map((item, i) => (
+                <div key={i} className="flex items-center justify-between text-[15.5px]">
+                  <span className="text-gray-700">
+                    {item.name} x {item.quantity}
+                  </span>
+                  <span className="text-gray-700">
+                    Rs {item.price * item.quantity}
+                  </span>
+                </div>
                 ))}
               </div>
 
@@ -58,7 +81,7 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 text-sm">Subtotal</span>
                   <span className="text-gray-900">
-                    Rs {selectedOrder.total}
+                    Rs {subtotal.toFixed(2)}
                   </span>
                 </div>
 
@@ -85,7 +108,7 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
                     <span>Discount ({discount}%)</span>
                     <span>
                       − Rs{" "}
-                      {((selectedOrder.total * discount) / 100).toFixed(2)}
+                      {discountAmount.toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -93,7 +116,7 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
                 <div className="flex items-center justify-between border-t border-gray-200 pt-2">
                   <span className="text-gray-900">Final Amount</span>
                   <span className="text-red-500">
-                    Rs {(calculateFinalAmount(selectedOrder.total, discount)).toFixed(2)}
+                    Rs {finalAmount.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -150,7 +173,7 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
                   <p className="text-purple-700 text-sm">
                     Amount to collect: {" "}
                     <span className="text-purple-900">
-                      Rs {(calculateFinalAmount(selectedOrder.total, discount)).toFixed(2)}
+                      Rs {finalAmount.toFixed(2)}
                     </span>
                   </p>
                 </div>
@@ -159,9 +182,7 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
             {/* Confirm payment button */}
             <button
               disabled={!paymentMethod} 
-              onClick={()=>{changeStatus(selectedOrder.id,"completed");
-                handlePrint();
-              }}
+              onClick={handlePayment}
               className={`w-full py-3 rounded-lg transition-colors text-white ${
                 paymentMethod
                   ? "bg-red-500 hover:bg-red-600"
@@ -190,9 +211,43 @@ function TableOrderBill({selectedOrder, changeStatus, close}) {
           </div>
         )}
 
+        {confirmPayment && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <p className="mb-4 font-medium">
+                Was the payment successful?
+              </p>
+
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={() => setConfirmPayment(false)}
+                  className="px-4 py-1.5 text-[15px] font-medium border rounded-lg bg-red-500 text-white"
+                >
+                  No
+                </button>
+
+                <button
+                  onClick={() => {
+                    completeTableOrders(selectedOrder.orders);
+                    setConfirmPayment(false);
+                    close();
+                  }}
+                  className="px-4 py-1.5 text-[15px] font-medium bg-green-500 text-white rounded-lg"
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          </div>
+          )}
+
         <PrintTableBill
-          selectedOrder={selectedOrder}
-          discount={discount}
+          items={items}
+          subtotal={subtotal}
+          discountAmount={discountAmount}
+          finalAmount={finalAmount}
+          tableNumber={selectedOrder.tableNumber}
+          /* customerName={selectedOrder.customerName} */
           paymentMethod={paymentMethod}
         />
       </div>

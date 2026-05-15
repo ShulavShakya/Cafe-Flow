@@ -7,6 +7,9 @@ import { privateAPI } from "../../../auth/config/api.js";
 // import { set } from "react-datepicker/dist/dist/date_utils.js";
 
 function Rooms() {
+
+  const { rooms, setRooms, changeRoomStatus, deleteRoom } = useRooms();
+
   const [showForm, setShowForm] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState([]);

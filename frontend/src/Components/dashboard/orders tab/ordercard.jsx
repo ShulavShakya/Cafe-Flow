@@ -1,18 +1,27 @@
-import { ChefHat, X, Percent, QrCode, Banknote, CircleCheck } from "lucide-react";
-import { useState } from "react";
+import {
+  ChefHat,
+  X,
+  Percent,
+  QrCode,
+  Banknote,
+  CircleCheck,
+} from "lucide-react";
 
-function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
-
+function OrderCard({ order, view, changeStatus, openTableBill }) {
   return (
-    <div key={order.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
-      
+    <div
+      key={order.id}
+      className="bg-white rounded-xl shadow-sm overflow-hidden"
+    >
       {/* Header */}
       <div className="bg-red-500 text-white p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="opacity-90 text-sm">Order #{order.id}</p>
             <p>
-              {order.locationType === "table" ? `Table ${order.tableNumber}` : `Room ${order.roomNumber}`}
+              {order.locationType === "table"
+                ? `Table ${order.tableNumber}`
+                : `Room ${order.roomNumber}`}
             </p>
           </div>
           <div className="text-right">
@@ -23,7 +32,6 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
       </div>
 
       <div className="p-4">
-        
         {/* Items */}
         <p className="text-gray-600 text-sm mb-2">Order Items:</p>
         <div className="space-y-2 mb-4">
@@ -34,9 +42,7 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
             >
               <span className="text-gray-700">{item.name}</span>
               <div className="flex items-center gap-3">
-                <span className="text-gray-500 text-sm">
-                  x{item.quantity}
-                </span>
+                <span className="text-gray-500 text-sm">x{item.quantity}</span>
                 <span className="text-gray-700">Rs {item.price}</span>
               </div>
             </div>
@@ -53,15 +59,13 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
 
         {/* Status + Actions */}
         <div className="flex items-center justify-between mb-4">
-          
           {/* Status Badge */}
           {order.status === "preparing" ? (
             <span className="px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700 flex items-center gap-1">
               <ChefHat className="w-4 h-4" />
               Preparing
             </span>
-          ) : 
-          (
+          ) : (
             <span className="px-3 py-1 rounded-full text-sm bg-green-100 text-green-700 flex items-center gap-1">
               <CircleCheck className="w-4 h-4" />
               Prepared
@@ -70,10 +74,9 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
 
           {/* Actions */}
           <div className="flex gap-2">
-            
             {view === "kitchen" && order.status === "preparing" && (
               <button
-                onClick={() => changeStatus( order.id, "prepared" )}
+                onClick={() => changeStatus(order.id, "prepared")}
                 className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-sm"
               >
                 Mark Ready
@@ -82,18 +85,20 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
 
             {order.status === "prepared" && (
               <>
-                {view==="waiter" && order.locationType === "table" && (
+                {view === "waiter" && order.locationType === "table" && (
                   <button
-                    onClick={() => openTableBill(order.tableNumber)}
+                    onClick={() =>
+                      openTableBill(order.tableNumber, order.customerName)
+                    }
                     className="bg-purple-600 text-white px-4 py-1 rounded text-sm hover:bg-purple-700"
                   >
                     Pay
                   </button>
                 )}
 
-                {view==="waiter" && order.locationType === "room" && (
+                {view === "waiter" && order.locationType === "room" && (
                   <button
-                    onClick={() => changeStatus( order.id, "delivered" )}
+                    onClick={() => changeStatus(order.id, "delivered")}
                     className="bg-blue-500 text-white px-4 py-1 rounded text-sm hover:bg-blue-600"
                   >
                     Room Service
@@ -103,7 +108,7 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
             )}
 
             <button
-              onClick={() => onCancel(order.id)}
+              onClick={() => changeStatus(order.id, "cancelled")}
               className="text-red-500 border border-red-500 px-4 py-1 rounded text-sm hover:text-red-600 hover:border-red-600 hover:bg-gray-100"
             >
               Cancel
@@ -114,13 +119,15 @@ function OrderCard({ order, view, onCancel, changeStatus, openTableBill }) {
         {/* Customization */}
         {order.customization && (
           <>
-            <h1 className="border-t border-gray-200 text-gray-600 pt-3">Customization Request:</h1>
+            <h1 className="border-t border-gray-200 text-gray-600 pt-3">
+              Customer Request:
+            </h1>
             <p className="p-2 text-gray-600 pt-1">{order.customization}</p>
           </>
         )}
       </div>
     </div>
-  )
-};
+  );
+}
 
-export default OrderCard
+export default OrderCard;

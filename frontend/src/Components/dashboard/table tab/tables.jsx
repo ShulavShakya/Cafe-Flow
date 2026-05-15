@@ -2,32 +2,15 @@ import { Plus } from "lucide-react";
 import AddTableForm from "./addtableform.jsx";
 import { useState } from "react";
 import StatusForm from "./tablestatusform.jsx";
-import TableCard from "./tablecard"
+import TableCard from "./tablecard";
+import { useTables } from "../../../hooks/usetable.jsx";
 
 function Tables() {
+
+  const {tables, setTables, changeTableStatus, deleteTable}=useTables();
+  
   const [showForm, setShowForm] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
-
-  const [tables, setTables] = useState([
-    { id: 1, tableNo: 4, capacity: 2, status: "Available"},
-    { id: 2, tableNo: 2, capacity: 4, status: "Available"},
-    { id: 3, tableNo: 3, capacity: 4, status: "Available"},
-    { id: 4, tableNo: 1, capacity: 1, status: "Available"},
-  ]);
-
-  const changeTableStatus = (id, status) => {
-    setTables(prev =>
-      prev.map(table =>
-        table.id === id
-          ? { ...table, status }
-          : table
-      )
-    );
-  };
-
-  const deleteTable = (id) => {
-    setTables(prev => prev.filter( table=>table.id !== id ))
-  }
   
   return (
     <div className="flex-1 min-h-screen p-8 bg-gray-50">

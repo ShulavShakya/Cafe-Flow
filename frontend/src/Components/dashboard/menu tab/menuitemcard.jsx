@@ -3,6 +3,7 @@ import { MdRoomService } from "react-icons/md";
 import { FaUtensilSpoon, FaGlassCheers } from "react-icons/fa";
 import { FaGlassWater } from "react-icons/fa6";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 function MenuItemCard({
   menuItemsData,
@@ -11,7 +12,6 @@ function MenuItemCard({
   addToOrder,
 }) {
   const [deletePopup, setDeletePopup] = useState(null);
-
   return (
     <div
       className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-h-150 
@@ -66,8 +66,10 @@ function MenuItemCard({
 
             {/* Availability toggle */}
             <button
-              onClick={() => toggleAvailability(item.menu_item_id)}
-              className="border border-gray-100 rounded-2xl px-3 py-1 shadow-sm hover:bg-gray-50"
+              onClick={() => role === "kitchen" && toggleAvailability(item.id)}
+              disabled={role !== "kitchen"}
+              className={`border border-gray-100 rounded-2xl px-3 py-1 shadow-sm 
+              ${role === "kitchen" ? "hover:bg-gray-50" : "opacity-60 cursor-not-allowed"}`}
             >
               {item.available ? (
                 <div className="flex items-center text-green-500 gap-1">

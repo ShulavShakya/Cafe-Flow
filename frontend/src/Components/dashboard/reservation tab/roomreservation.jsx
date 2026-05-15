@@ -1,6 +1,7 @@
 import { BookCheck, SlidersHorizontal, LogIn, Trash2, Minus } from "lucide-react";
 import { useState, useEffect } from "react";
 import Filter from "../../layouts/filter";
+import { useRooms } from "../../../hooks/useroom";
 
 function RoomReservations({ roomReservations, deleteRoomReservation, formatTime }) {
 
@@ -13,6 +14,21 @@ function RoomReservations({ roomReservations, deleteRoomReservation, formatTime 
   
     const [popUp,setPopUp]=useState(false);
     const [selectedRoom, setSelectedRoom]=useState(null);
+
+    const { assignRoom } = useRooms();
+
+
+    const handleAssign = (room) => {
+        //check in the back if the room in available and then if available store the
+        //added room details and if today===checkindate then keep it reserved on that day only if available otherwise send a notificaton to make it available
+        //placeholder
+        assignRoom(room.roomNo, "Reserved", {
+            name: room.name,
+            checkInDate: room.checkInDate,
+            checkInTime: room.checkInTime,
+            contact: room.contact,
+        });
+    };
   
     return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
@@ -102,7 +118,9 @@ function RoomReservations({ roomReservations, deleteRoomReservation, formatTime 
                     </td>
                     
                     <td className="px-6 py-3 text-gray-600 text-sm">
-                        <button className='flex items-center justify-center text-blue-500 gap-1
+                        <button 
+                        onClick = { () => handleAssign(room) }
+                        className='flex items-center justify-center text-blue-500 gap-1
                         hover:text-blue-700 rounded-4xl'>
                             <LogIn className='w-5 h-5'/>
                             Assign

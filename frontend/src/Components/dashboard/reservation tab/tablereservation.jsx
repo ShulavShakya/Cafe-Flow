@@ -1,6 +1,7 @@
 import { BookCheck, SlidersHorizontal, LogIn, Trash2 } from "lucide-react";
 import {useState, useEffect} from "react";
 import Filter from "../../layouts/filter";
+import { useTables } from "../../../hooks/usetable";
 
 function TableReservations({ tableReservations, deleteTableReservation, formatTime }) {
     
@@ -11,8 +12,23 @@ function TableReservations({ tableReservations, deleteTableReservation, formatTi
         setFilteredData(tableReservations);
     }, [tableReservations]);
 
+    const {assignTable} = useTables();
+
     const [popUp,setPopUp]=useState(false);
     const [selectedTable, setSelectedTable] = useState(null);
+
+    const handleAssign = (table) => {
+    // only allow if available
+    //backend check logic, 
+    //if the table is reserved, check for time and date and make it reserved 10-15 minutes before if available and if not send a notificaiton and then when available reserve 
+    //plaveholder
+    assignTable(table.tableNo, {
+        name: table.name,
+        resvDate: table.resvDate,
+        time: table.time,
+        contact: table.contact,
+    });
+    };
   
     return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200 mb-6">
@@ -90,7 +106,9 @@ function TableReservations({ tableReservations, deleteTableReservation, formatTi
                         {table.contact}
                     </td>
                     <td className="px-6 py-3 text-gray-600 text-sm">
-                        <button className='flex items-center justify-center text-blue-500 gap-1
+                        <button 
+                        onClick = {() => handleAssign(table)}
+                        className='flex items-center justify-center text-blue-500 gap-1
                         hover:text-blue-700 rounded-4xl'>
                             <LogIn className='w-5 h-5'/>
                             Assign

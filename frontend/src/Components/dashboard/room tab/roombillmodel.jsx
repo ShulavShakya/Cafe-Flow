@@ -16,10 +16,16 @@ function Bill({checkedOutRoom, close})
     const [editDate,setEditDate]=useState(false);
     const [editNights,setEditNights]=useState(false);
     const [editRate,setEditRate]=useState(false);
-    const { ordersData } = useOrders();
+    const [confirmComplete, setConfirmComplete] = useState(false);
+    
+    const { ordersData, completeRoomOrders } = useOrders();
 
     const roomOrders = ordersData.filter(
-      o => o.locationType === "room" && o.roomNumber === checkedOutRoom.roomNo
+      o =>
+          o.locationType === "room" &&
+          o.roomNumber === checkedOutRoom.roomNo &&
+          o.status === "delivered" &&
+          o.customerName === "Sarah Smith"//later put customerName here
     );
 
     const getOrderTotal = (order) => {
@@ -42,6 +48,7 @@ function Bill({checkedOutRoom, close})
 
     const handlePrint = () => {
       window.print();
+      setConfirmComplete(true);
     };
 
     const formatDate = (date) => {
@@ -55,7 +62,7 @@ function Bill({checkedOutRoom, close})
     };
 
     return(
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-gray-100">
@@ -337,6 +344,38 @@ function Bill({checkedOutRoom, close})
                     </button>
                 </div>
             </div>
+          )}
+
+          {confirmComplete && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-60">
+            <div className="bg-white rounded-lg p-6 shadow-lg w-75 text-center">
+              
+              <p className="text-gray-800 font-medium mb-4">
+                Was the payment successful?
+              </p>
+
+              <div className="flex justify-center items-center gap-4">
+                <button
+                  onClick={() => setConfirmComplete(false)}
+                  className="px-4 py-1.5 bg-red-500 text-white rounded-lg"
+                >
+                  No
+                </button>
+
+                <button
+                  onClick={() => {
+                    completeRoomOrders(checkedOutRoom.roomNo, "Sarah Smith");
+                    setConfirmComplete(false);
+                    close();
+                  }}
+                  className="px-4 py-1.5 bg-green-500 text-white rounded-lg"
+                >
+                  Yes
+                </button>
+              </div>
+
+            </div>
+          </div>
           )}
 
           <PrintBill
