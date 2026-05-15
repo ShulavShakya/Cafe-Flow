@@ -10,14 +10,14 @@ import {
 function OrderCard({ order, view, changeStatus, openTableBill }) {
   return (
     <div
-      key={order.id}
+      key={order.food_order_id}
       className="bg-white rounded-xl shadow-sm overflow-hidden"
     >
       {/* Header */}
       <div className="bg-red-500 text-white p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="opacity-90 text-sm">Order #{order.id}</p>
+            <p className="opacity-90 text-sm">Order #{order.food_order_id}</p>
             <p>
               {order.locationType === "table"
                 ? `Table ${order.tableNumber}`
@@ -25,7 +25,7 @@ function OrderCard({ order, view, changeStatus, openTableBill }) {
             </p>
           </div>
           <div className="text-right">
-            <p className="opacity-90 text-sm">{order.time}</p>
+            <p className="opacity-90 text-sm">{order.created_at}</p>
             <p className="text-sm">{order.customerName}</p>
           </div>
         </div>

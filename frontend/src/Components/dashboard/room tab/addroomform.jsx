@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { privateAPI } from "../../../auth/config/api";
+import { privateAPI } from "../../../auth/config/api.js";
 
 const VALID_STATUSES = ["Available", "Occupied", "Cleaning", "Reserved"];
 

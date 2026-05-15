@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
+import { privateAPI } from "../../../auth/config/api.js";
 
 function KitchenOrderTicket({ orderSlip, setOrderSlip }) {
   const [location, setLocation] = useState("table");
@@ -10,23 +11,24 @@ function KitchenOrderTicket({ orderSlip, setOrderSlip }) {
   const [msg, setMsg] = useState("");
 
   const itemCount = (id) => {
-    return orderSlip.filter((item) => item.id === id).length;
+    return orderSlip.filter((item) => item.menu_item_id === id).length;
   };
 
   const uniqueItems = orderSlip.filter(
-    (item, index, self) => index === self.findIndex((i) => i.id === item.id),
+    (item, index, self) =>
+      index === self.findIndex((i) => i.menu_item_id === item.menu_item_id),
   );
 
   const updateQuantity = (id, change) => {
     if (change === 1) {
       //add item
-      const existingItem = orderSlip.find((item) => item.id === id);
+      const existingItem = orderSlip.find((item) => item.menu_item_id === id);
       if (existingItem) {
         setOrderSlip([...orderSlip, existingItem]);
       }
     } else {
       //remove item
-      const itemIndex = orderSlip.findIndex((item) => item.id === id);
+      const itemIndex = orderSlip.findIndex((item) => item.menu_item_id === id);
       if (itemIndex !== -1) {
         const updatedSlip = [...orderSlip];
         updatedSlip.splice(itemIndex, 1);
@@ -39,35 +41,55 @@ function KitchenOrderTicket({ orderSlip, setOrderSlip }) {
     return sum + item.price;
   }, 0);
 
-  const validateSlip = () => {
-    if (location === "table") {
-      if (!tableNumber) {
-        setMsg("Please enter table number.");
-        return;
-      }
+  const handleSubmit = async () => {
+    if (location === "table" && !tableNumber) {
+      setMsg("Please enter table number.");
+      return;
     }
-    if (location === "room") {
-      if (!roomNumber) {
-        setMsg("Please enter room number.");
-        return;
-      }
+    if (location === "room" && !roomNumber) {
+      setMsg("Please enter room number.");
+      return;
     }
     if (!guestName) {
       setMsg("Please enter guest name.");
       return;
     }
-
     if (orderSlip.length === 0) {
       setMsg("Please add at least one item to the order.");
       return;
     }
 
-    setMsg("");
-    setTableNumber("");
-    setRoomNumber("");
-    setGuestName("");
-    setCustomization("");
-    setOrderSlip([]);
+    try {
+      const tableRes = await privateAPI.get(
+        `/tables?table_number=${tableNumber}`,
+      );
+      const table = tableRes.data.data[0];
+      if (!table) {
+        setMsg("Table not found.");
+        return;
+      }
+
+      const uniqueItemIds = [...new Set(orderSlip.map((i) => i.menu_item_id))];
+      const items = uniqueItemIds.map((id) => ({
+        menu_item_id: id,
+        quantity: orderSlip.filter((i) => i.menu_item_id === id).length,
+      }));
+
+      await privateAPI.post("/food-orders/", {
+        table_id: table.table_id,
+        items,
+      });
+
+      setMsg("");
+      setTableNumber("");
+      setRoomNumber("");
+      setGuestName("");
+      setCustomization("");
+      setOrderSlip([]);
+    } catch (err) {
+      console.error(err);
+      setMsg("Failed to place order. Try again.");
+    }
   };
 
   return (
@@ -136,15 +158,15 @@ function KitchenOrderTicket({ orderSlip, setOrderSlip }) {
 
           {uniqueItems.map((item) => (
             <div
-              key={item.id}
+              key={item.menu_item_id}
               className="mt-3 mb-3 flex items-center font-medium gap-8 text-[16.5px] justify-between text-gray-700"
             >
-              {item.name} x {itemCount(item.id)}
+              {item.name} x {itemCount(item.menu_item_id)}
               <div className="flex items-center gap-4">
-                <button onClick={() => updateQuantity(item.id, -1)}>
+                <button onClick={() => updateQuantity(item.menu_item_id, -1)}>
                   <Minus className="w-4.5 h-4.5" />
                 </button>
-                <button onClick={() => updateQuantity(item.id, 1)}>
+                <button onClick={() => updateQuantity(item.menu_item_id, 1)}>
                   <Plus className="w-4.5 h-4.5" />
                 </button>
               </div>
@@ -161,7 +183,7 @@ function KitchenOrderTicket({ orderSlip, setOrderSlip }) {
 
           <div className="flex items-center justify-center">
             <button
-              onClick={() => validateSlip()}
+              onClick={() => handleSubmit()}
               className="bg-green-500 font-medium rounded-xl text-white w-fit px-5 py-1.5
                     hover:bg-green-400 text-lg"
             >

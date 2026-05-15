@@ -89,7 +89,7 @@ model Table {
   table_id     Int      @id @default(autoincrement())
   table_number String   @unique
   capacity     Int      @default(2)
-  status       String   @default("available")
+  status       String   @default("Available")
 
   food_orders  FoodOrder[]
   billings     Billing[]

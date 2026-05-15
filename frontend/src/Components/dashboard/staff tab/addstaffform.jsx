@@ -26,7 +26,20 @@ function AddStaffForm({ close }) {
     close();
   };
 
-  const handleSignup = () => {
+  const fetchStaffs = async () => {
+    try {
+      const res = await privateAPI.get("/staff/get-staff");
+      console.log("Staff list refreshed:", res.data.data);
+    } catch (error) {
+      console.error(
+        "API Error while fetching staff: ",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     // Regex rules
     const nameRegex = /^[A-Za-z\s]+$/;
     const contactRegex = /^9\d{9}$/;
@@ -67,7 +80,25 @@ function AddStaffForm({ close }) {
       return;
     }
 
-    //send data to backend
+    try {
+      setLoading(true);
+      await privateAPI.post("/staff/add-staff", {
+        full_name: fullname,
+        phone: contact,
+        role_name: roleName,
+        address,
+        email,
+        password,
+      });
+      resetForm();
+      fetchStaffs(); // Refresh the staff list
+    } catch (error) {
+      setMsg(
+        error.response?.data?.message || "Error occurred while adding staff",
+      );
+    } finally {
+      setLoading(false);
+    }
     resetForm();
   };
 
@@ -164,7 +195,7 @@ function AddStaffForm({ close }) {
           </button>
 
           <button
-            onClick={handleSignup}
+            onClick={handleSubmit}
             className="inline-flex w-20 h-9 px-4 py-3 text-[15px] font-medium items-center justify-center 
             bg-green-500 text-white rounded-lg hover:bg-green-600"
           >

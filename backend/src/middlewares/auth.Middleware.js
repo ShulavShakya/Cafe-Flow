@@ -21,7 +21,9 @@ export const authenticateToken = async (req, res, next) => {
       select: {
         user_id: true,
         email: true,
-        role: true,
+        role: {
+          select: { role_name: true },
+        },
       },
     });
 
@@ -44,6 +46,9 @@ export const authenticateToken = async (req, res, next) => {
 
 export const checkRole = (...allowedRoles) => {
   return (req, res, next) => {
+    console.log("checkRole hit");
+    console.log("req.user:", req.user);
+    console.log("allowedRoles:", allowedRoles);
     if (!req.user) {
       return res.status(401).json({
         status: false,

@@ -1,6 +1,8 @@
 // src/controllers/menuItem.controller.js
 import { prisma } from "../utils/prisma.js";
 
+const VALID_STATUSES = ["Available", "Unavailable"];
+
 // ─── Create Menu Item ─────────────────────────────────────────────────────────
 export const createMenuItem = async (req, res, next) => {
   try {
@@ -26,7 +28,7 @@ export const createMenuItem = async (req, res, next) => {
       data: {
         name,
         price: Number(price),
-        available_status: available_status || "available",
+        available_status: available_status || "Available",
         category: { connect: { category_id: category.category_id } },
       },
       include: { category: true },

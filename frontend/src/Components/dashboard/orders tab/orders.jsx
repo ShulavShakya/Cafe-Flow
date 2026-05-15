@@ -4,6 +4,7 @@ import KitchenOrders from "./kitchenorders";
 import WaiterOrders from "./waiterorders";
 import { useOrders } from "../../../hooks/useorder";
 import Cookies from "js-cookie";
+import { useAuth } from "../../../auth/authContext";
 
 function OrdersView() {
   const {
@@ -13,10 +14,10 @@ function OrdersView() {
     kitchenOrders,
     completedOrders,
   } = useOrders();
-  
+
   //on cancel just give an alert and delete order
   const [view, setView] = useState("kitchen"); //kitchen or waiter
-  const user = JSON.parse(Cookies.get("user") || "{}");
+  const { user } = useAuth();
   const role = user?.role?.role_name || role;
 
   const waiterOrders = ordersData.filter(

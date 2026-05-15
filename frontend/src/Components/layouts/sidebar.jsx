@@ -52,7 +52,7 @@ function AdminDashboard({ open, setOpen }) {
     ],
   };
 
-  const user = JSON.parse(Cookies.get("user") || "{}");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const role = user?.role?.role_name || role;
   const email = user?.email || "";

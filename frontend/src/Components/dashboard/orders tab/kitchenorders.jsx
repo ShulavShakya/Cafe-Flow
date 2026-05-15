@@ -16,6 +16,7 @@ function KitchenOrders({ kitchenOrders, onCancel, changeStatus }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {kitchenOrders.map((order) => (
             <OrderCard
+              key={order.food_order_id}
               order={order}
               view="kitchen"
               onCancel={onCancel}

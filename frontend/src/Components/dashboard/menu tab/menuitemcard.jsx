@@ -3,7 +3,7 @@ import { MdRoomService } from "react-icons/md";
 import { FaUtensilSpoon, FaGlassCheers } from "react-icons/fa";
 import { FaGlassWater } from "react-icons/fa6";
 import { useState } from "react";
-import Cookies from "js-cookie";
+import { useAuth } from "../../../auth/authContext";
 
 function MenuItemCard({
   menuItemsData,
@@ -11,7 +11,11 @@ function MenuItemCard({
   deleteItem,
   addToOrder,
 }) {
+  const { user } = useAuth();
   const [deletePopup, setDeletePopup] = useState(null);
+
+  const canToggele =
+    user.role?.role_name === "kitchen" || user?.role?.role_name === "admin";
   return (
     <div
       className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-h-150 
@@ -56,7 +60,7 @@ function MenuItemCard({
           <div className="flex justify-between">
             <button
               onClick={() => addToOrder(item)}
-              disabled={!item.available}
+              disabled={!item.available_status}
               className="bg-red-500 flex items-center justify-center gap-1 
               rounded-lg px-3 py-1 text-slate-50 font-medium hover:bg-red-600"
             >
@@ -66,12 +70,14 @@ function MenuItemCard({
 
             {/* Availability toggle */}
             <button
-              onClick={() => role === "kitchen" && toggleAvailability(item.id)}
-              disabled={role !== "kitchen"}
+              onClick={() =>
+                canToggele && toggleAvailability(item.menu_item_id)
+              }
+              disabled={!canToggele}
               className={`border border-gray-100 rounded-2xl px-3 py-1 shadow-sm 
-              ${role === "kitchen" ? "hover:bg-gray-50" : "opacity-60 cursor-not-allowed"}`}
+              ${canToggele ? "hover:bg-gray-50" : "opacity-60 cursor-not-allowed"}`}
             >
-              {item.available ? (
+              {item.available_status === "Available" ? (
                 <div className="flex items-center text-green-500 gap-1">
                   <CircleCheck className="w-5 h-5 text-green-500" />
                   Available

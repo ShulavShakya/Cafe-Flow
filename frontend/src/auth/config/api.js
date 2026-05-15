@@ -1,8 +1,6 @@
 import axios from "axios";
 
-// const BASE_URL = "http://10.124.177.239:8000/api";
-const BASE_URL = "http://192.168.100.116:5051/api";
-// const BASE_URL = "http://localhost:5051/api";
+const BASE_URL = "/api";
 
 export const publicAPI = axios.create({
   baseURL: BASE_URL,
@@ -13,13 +11,34 @@ export const privateAPI = axios.create({
   withCredentials: true,
 });
 
-// Optional: handle global errors
-// privateAPI.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 401) {
-//       console.log("Unauthorized - maybe refresh token needed");
-//     }
-//     return Promise.reject(error);
-//   },
-// );
+privateAPI.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      originalRequest._retry ||
+      originalRequest.url.includes("/auth/refresh") ||
+      originalRequest.url.includes("/auth/login")
+    ) {
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401) {
+      originalRequest._retry = true;
+
+      try {
+        await axios.post(
+          `${BASE_URL}/auth/refresh`,
+          {},
+          { withCredentials: true },
+        );
+        return privateAPI(originalRequest);
+      } catch {
+        return Promise.reject(error); // ← just reject, don't redirect
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);

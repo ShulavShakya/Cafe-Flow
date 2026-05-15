@@ -1,32 +1,21 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+// authContext.jsx
+import { createContext, useContext, useState } from "react";
 import { privateAPI } from "./config/api";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-
-  useEffect(() => {
-    const storedUser =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
-
+  const [user, setUser] = useState(() => {
     try {
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      localStorage.removeItem("user");
-      sessionStorage.removeItem("user");
+      const stored = localStorage.getItem("user");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
     }
+  });
 
-    setAuthLoading(false);
-  }, []);
-
-  const login = ({ userData, keepSignedIn }) => {
-    const storage = keepSignedIn ? localStorage : sessionStorage;
-
-    storage.setItem("user", JSON.stringify(userData));
+  const login = ({ userData }) => {
+    localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
   };
 
@@ -36,14 +25,14 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error(err);
     }
-
     localStorage.removeItem("user");
-    sessionStorage.removeItem("user");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, authLoading }}>
+    <AuthContext.Provider
+      value={{ user, setUser, login, logout, authLoading: false }}
+    >
       {children}
     </AuthContext.Provider>
   );

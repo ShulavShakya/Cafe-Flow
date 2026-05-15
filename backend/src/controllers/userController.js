@@ -75,6 +75,7 @@ export const addStaff = async (req, res, next) => {
 // GET /staff  — list all staff with their role
 export const getStaff = async (req, res, next) => {
   try {
+    console.log("HIT");
     const staff = await prisma.user.findMany({
       select: {
         user_id: true,

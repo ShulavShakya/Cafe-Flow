@@ -4,9 +4,13 @@ import NewItemForm from "./newitemform";
 import MenuItemCard from "./menuitemcard";
 import KitchenOrderTicket from "./kitchenorderticket";
 import { privateAPI } from "../../../auth/config/api.js";
+import { useAuth } from "../../../auth/authContext.jsx";
 
 function MenuView() {
+  const { user } = useAuth();
+
   const [menuItemsData, setMenuItemsData] = useState([]);
+  const [categories, setCategories] = useState([]);
   // const [menuItemsData, setMenuItemsData] = useState([
   //   {
   //     id: 1,
@@ -63,14 +67,25 @@ function MenuView() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const categories = [
-    "All",
-    "Food",
-    "Dessert",
-    "Hot Beverage",
-    "Soft Drinks",
-    "Hard Drinks",
-  ];
+  // const categories = [
+  //   "All",
+  //   "Food",
+  //   "Dessert",
+  //   "Hot Beverage",
+  //   "Soft Drinks",
+  //   "Hard Drinks",
+  // ];
+
+  const fetchCategories = async () => {
+    try {
+      const res = await privateAPI.get("/categories/");
+      setCategories(["All", ...(res.data.data || []).map((c) => c.name)]);
+      console.log("Fetched categories:", res.data.data);
+    } catch (err) {
+      console.error("Failed to fetch categories:", err);
+      setCategories(["All"]);
+    }
+  };
 
   const [orderSlip, setOrderSlip] = useState([]);
 
@@ -85,14 +100,16 @@ function MenuView() {
 
   useEffect(() => {
     fetchMenuItems();
+    fetchCategories();
   }, []);
 
   const toggleItemAvailability = async (id) => {
     try {
-      const item = menuItemsData.find((i) => i.id === id);
+      const item = menuItemsData.find((i) => i.menu_item_id === id);
       await privateAPI.put(`/menu-items/${id}/`, {
         ...item,
-        available_status: item.available_status ? "available" : "unavailable",
+        available_status:
+          item.available_status === "Available" ? "Unavailable" : "Available",
       });
       fetchMenuItems();
     } catch (err) {
@@ -125,17 +142,18 @@ function MenuView() {
             Select items to create that perfect order
           </p>
         </div>
-
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="bg-blue-600 text-white px-3 py-2 rounded-lg flex items-center
-            gap-1 hover:bg-blue-700"
-          >
-            <Plus className="w-5 h-5" />
-            <p className="font-medium text-sm md:text-[16px]">Add New Item</p>
-          </button>
-        </div>
+        {user?.role?.role_name === "admin" && (
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-blue-600 text-white px-3 py-2 rounded-lg flex items-center
+              gap-1 hover:bg-blue-700"
+            >
+              <Plus className="w-5 h-5" />
+              <p className="font-medium text-sm md:text-[16px]">Add New Item</p>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="mb-6 flex gap-3 w-full overflow-x-auto scrollbar-hide p-1">

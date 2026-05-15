@@ -17,6 +17,16 @@ function Staff() {
   const totalStaff = staff.length;
   const totalPayroll = staff.reduce((sum, s) => sum + (s.salary || 0), 0);
 
+  const fetchStaffs = async () => {
+    try {
+      const res = await privateAPI.get("/staff/get-staff");
+      setStaff(res.data.data || []);
+    } catch (error) {
+      console.error("API Error: ", error.response?.data || error.message);
+      // toast.error("Couldn't get staffs. Try again");
+    }
+  };
+
   const updateSalary = async () => {
     if (!salary || salary <= 0) {
       setMsg("Enter valid salary");
@@ -38,16 +48,6 @@ function Staff() {
       setMsg(
         error.response?.data?.message || "Couldn't update salary. Try again.",
       );
-    }
-  };
-
-  const fetchStaffs = async () => {
-    try {
-      const res = await privateAPI.get("/staff/get-staff");
-      setStaff(res.data.data || []);
-    } catch (error) {
-      console.error("API Error: ", error.response?.data || error.message);
-      // toast.error("Couldn't get staffs. Try again");
     }
   };
 

@@ -56,7 +56,7 @@ export const login = async (req, res, next) => {
     };
 
     const accessToken = jwt.sign(payload, process.env.KEY, {
-      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
+      expiresIn: process.env.JWT_EXPIRES_IN || "24h",
     });
 
     const refreshToken = jwt.sign(payload, process.env.REFRESH_KEY, {
@@ -76,7 +76,7 @@ export const login = async (req, res, next) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 15 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.cookie("refresh_token", refreshToken, {
@@ -173,5 +173,30 @@ export const refreshToken = async (req, res) => {
     return res.json({ message: "Token refreshed" });
   } catch (err) {
     return res.status(403).json({ message: "Refresh failed" });
+  }
+};
+
+export const verifyMe = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { user_id: req.user.user_id },
+      select: {
+        user_id: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "User verified",
+      data: user,
+    });
+  } catch (error) {
+    console.error("verifyMe error:", error); // ← add this
+    return res.status(500).json({ message: "Verification failed" });
   }
 };

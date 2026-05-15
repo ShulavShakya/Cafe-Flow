@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../../auth/useAuth";
+import { useAuth } from "../../auth/authContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/images/kitchen_pulse.png";
@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { publicAPI } from "../../auth/config/api";
 
 function LoginScreen() {
-  const { setUser } = useAuth();
+  const { login } = useAuth();
 
   const navigate = useNavigate();
 
@@ -29,23 +29,16 @@ function LoginScreen() {
         email,
         password,
       });
+      const userData = res.data.data;
+      console.log("Login successful:", userData);
 
-      const user = res.data.data;
-      console.log(user);
-      console.log("Response data", res.data);
-
-      console.log("Access_token", res.data.accessToken);
-
-      Cookies.set("user", JSON.stringify(user));
-      Cookies.set("access_token", res.data.accessToken);
-
-      setUser(user);
+      login({ userData });
 
       toast.success("Logged in Successfully");
 
       setMsg("");
 
-      const role = user.role.role_name;
+      const role = userData.role.role_name;
 
       if (role === "admin") {
         navigate("/admin");
@@ -53,6 +46,8 @@ function LoginScreen() {
         navigate("/waiter");
       } else if (role === "receptionist") {
         navigate("/receptionist");
+      } else if (role === "kitchen") {
+        navigate("/kitchen");
       } else {
         navigate("/login");
       }

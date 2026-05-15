@@ -4,51 +4,17 @@ import RoomCard from "./roomcard.jsx";
 import RoomStatusForm from "./roomstatusform.jsx";
 import { useEffect, useState } from "react";
 import { privateAPI } from "../../../auth/config/api.js";
+import { useRooms } from "../../../hooks/useroom.jsx";
 // import { set } from "react-datepicker/dist/dist/date_utils.js";
 
 function Rooms() {
-
-  const { rooms, setRooms, changeRoomStatus, deleteRoom } = useRooms();
-
+  const { rooms, fetchRooms, changeRoomStatus, deleteRoom } = useRooms();
   const [showForm, setShowForm] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [rooms, setRooms] = useState([]);
-  /* const [showPopup, setShowPopup] = useState(false); */
-
-  // const [rooms, setRooms] = useState([
-  //   { id: 1, roomNo: 3, capacity: 2, status: "Available" },
-  //   { id: 2, roomNo: 2, capacity: 4, status: "Available" },
-  //   { id: 3, roomNo: 4, capacity: 4, status: "Available" },
-  //   { id: 4, roomNo: 1, capacity: 1, status: "Available" },
-  // ]);
-
-  const changeRoomStatus = (id, status) => {
-    setRooms((prev) =>
-      prev.map((room) => (room.room_id === id ? { ...room, status } : room)),
-    );
-  };
-
-  const fetchRooms = async () => {
-    try {
-      const res = await privateAPI.get("/rooms/");
-      setRooms(res.data.data || []);
-    } catch (err) {
-      console.error("Failed to fetch rooms:", err);
-    }
-  };
 
   useEffect(() => {
     fetchRooms();
   }, []);
-
-  const deleteRoom = async (id) => {
-    try {
-      await privateAPI.delete(`/rooms/${id}`);
-      fetchRooms();
-    } catch (err) {
-      console.error("Failed to delete room:", err);
-    }
-  };
 
   return (
     <div className="flex-1 min-h-screen p-8 bg-gray-50">

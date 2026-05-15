@@ -1,7 +1,7 @@
 // src/controllers/table.controller.js
 import { prisma } from "../utils/prisma.js";
 
-const VALID_STATUSES = ["available", "occupied", "reserved"];
+const VALID_STATUSES = ["Available", "Occupied", "Reserved"];
 
 // ─── Create Table ─────────────────────────────────────────────────────────────
 export const createTable = async (req, res, next) => {
@@ -29,7 +29,7 @@ export const createTable = async (req, res, next) => {
       data: {
         table_number,
         capacity: capacity ? Number(capacity) : 2,
-        status: status || "available",
+        status: status || "Available",
       },
     });
 
