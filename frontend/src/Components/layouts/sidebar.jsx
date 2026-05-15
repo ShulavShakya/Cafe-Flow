@@ -44,9 +44,7 @@ function AdminDashboard({ open, setOpen }) {
       { id: "menu", label: "Menu", icon: NotepadText },
     ],
 
-    receptionist: [
-      { id: "orders", label: "Orders", icon: ShoppingCart },
-      { id: "tables", label: "Tables", icon: MdTableRestaurant },
+    reception: [
       { id: "rooms", label: "Rooms", icon: BedSingle },
       { id: "reservations", label: "Reservations", icon: BookMarked },
     ],

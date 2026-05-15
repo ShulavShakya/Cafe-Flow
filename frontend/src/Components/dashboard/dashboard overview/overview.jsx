@@ -11,9 +11,14 @@ import Piechart from "./piechart.jsx";
 import MetricCard from "../../layouts/metric.jsx";
 import { MdTableRestaurant } from "react-icons/md";
 import { useOrders } from "../../../hooks/useorder.jsx";
+import { useFinance } from "../../../hooks/useFinance.jsx";
 
 function Overview() {
   const { kitchenOrders, completedOrders } = useOrders();
+  const { todayRevenue, revenueChange, last6Days } = useFinance();
+
+  const formattedChange = revenueChange.toFixed(1);
+
   return (
     <div className="flex-1 min-h-screen bg-gray-50 p-8">
       {/* Header */}
@@ -27,29 +32,14 @@ function Overview() {
       {/* Today's status */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <MetricCard
-          title="Total Revenue"
-          value="Rs 0"
-          msg="x% from yesterday"
-          change="positive"
+          title="Today's Total Revenue"
+          value={`Rs ${todayRevenue}`}
+          msg={`${formattedChange}% from yesterday`}
+          change={revenueChange >= 0 ? "positive" : "negative"}
           icon={TrendingUp}
           color="purple"
         />
-        {/* <MetricCard
-            title="Expenses"
-            value="Rs 0"
-            msg="Less expenses"
-            change="positive"
-            icon={TrendingDown}
-            color="red"
-          />
-          <MetricCard
-            title="Net Earnings"
-            value="Rs 0"
-            msg="Profit"
-            change="positive"
-            icon={DollarSign}
-            color="green"
-          /> */}
+
         <MetricCard
           title="Completed Orders"
           value={completedOrders.length}
@@ -61,7 +51,7 @@ function Overview() {
         <MetricCard
           title="Total Check-outs"
           value="0"
-          msg="x check-ins today"
+          msg=""
           change=""
           icon={KeySquare}
           color="teal"
@@ -70,7 +60,7 @@ function Overview() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8">
         {/*line graph */}
-        <LineGraph />
+        <LineGraph revenueData={last6Days} />
 
         {/* Pie-chart */}
         <Piechart />

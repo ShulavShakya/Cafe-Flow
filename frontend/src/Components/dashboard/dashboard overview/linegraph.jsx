@@ -8,17 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function LineGraph() {
-  const revenueData = [
-    { name: "Sun", date: "2026-04-19", Revenue: 1200 },
-    { name: "Mon", date: "2026-04-20", Revenue: 4300 },
-    { name: "Tue", date: "2026-04-21", Revenue: 2200 },
-    { name: "Wed", date: "2026-04-22", Revenue: 3550 },
-    { name: "Thu", date: "2026-04-23", Revenue: 1500 },
-    { name: "Fri", date: "2026-04-24", Revenue: 3000 },
-    { name: "Sat", date: "2026-04-25", Revenue: 4050 },
-  ];
-
+function LineGraph({ revenueData }) {
   const hasData = revenueData && revenueData.length > 0;
 
   return (
@@ -26,10 +16,10 @@ function LineGraph() {
       <div className="flex items-start justify-between mb-6 gap-1">
         <div>
           <h3 className="text-[15px] md:text-lg font-semibold text-slate-900">
-            Weekly Revenue
+            Daily Revenue
           </h3>
           <p className="mb-4 text-sm md:text-[15px] text-gray-500">
-            Track daily revenue throughout the week
+            Track your everyday revenue
           </p>
         </div>
         <div className="flex items-center gap-1 pt-1 md:gap-2">
@@ -38,50 +28,47 @@ function LineGraph() {
         </div>
       </div>
 
-      {hasData ? (
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={revenueData}>
-            <defs>
-              <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis dataKey="name" stroke="#64748b" />
-            <YAxis stroke="#64748b" />
-            <Tooltip
-              contentStyle={{
-                borderRadius: "10px",
-                border: "none",
-                backgroundColor: "#ffffff",
-                color: "#111827",
-                fontWeight: 500,
-                boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
-              }}
-              labelFormatter={(value, payload) => {
-                const date = payload?.[0]?.payload?.date;
-
-                if (!date) return value;
-
-                return new Date(date).toLocaleDateString("en-CA");
-              }}
-            />
-            <Area
-              type="monotone"
-              dataKey="Revenue"
-              stroke="#8b5cf6"
-              strokeWidth={2}
-              fillOpacity={1}
-              fill="url(#revenueGradient)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      ) : (
-        <div className="h-70 w-full flex flex-col items-center justify-center text-gray-400">
-          <p className="text-sm">No revenue data yet</p>
-        </div>
-      )}
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={revenueData}>
+          <defs>
+            <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis
+            dataKey="date"
+            stroke="#64748b"
+            interval={0} // IMPORTANT: force all labels
+            tick={{ fontSize: 12 }}
+            angle={0} // prevent overlap
+            textAnchor="center"
+          />
+          <YAxis stroke="#64748b" />
+          <Tooltip
+            contentStyle={{
+              borderRadius: "10px",
+              border: "none",
+              backgroundColor: "#ffffff",
+              color: "#111827",
+              fontWeight: 500,
+              boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
+            }}
+            labelFormatter={(value) =>
+              new Date(value).toLocaleDateString("en-CA")
+            }
+          />
+          <Area
+            type="monotone"
+            dataKey="Revenue"
+            stroke="#8b5cf6"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#revenueGradient)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }

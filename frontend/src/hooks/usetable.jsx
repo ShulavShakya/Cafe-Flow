@@ -44,7 +44,7 @@ export function useTables() {
 
   const deleteTable = async (id) => {
     try {
-      const res = await privateAPI.delete(`/tables/${id}`);
+      await privateAPI.delete(`/tables/${id}`);
       fetchTables();
       // setTables((prev) => prev.filter((table) => table.id !== id));
     } catch (error) {

@@ -44,8 +44,8 @@ function LoginScreen() {
         navigate("/admin");
       } else if (role === "waiter") {
         navigate("/waiter");
-      } else if (role === "receptionist") {
-        navigate("/receptionist");
+      } else if (role === "reception") {
+        navigate("/reception");
       } else if (role === "kitchen") {
         navigate("/kitchen");
       } else {

@@ -93,11 +93,28 @@ export default [
     ],
   },
 
+  //kitchen route
+  {
+    path: "/kitchen",
+    element: (
+      <ProtectedRoute allowedRoles={["kitchen"]}>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+
+    children: [
+      { index: true, element: <Navigate to="orders" replace /> },
+
+      { path: "orders", element: <OrdersView /> },
+      { path: "menu", element: <MenuView /> },
+    ],
+  },
+
   // receptionist route
   {
-    path: "/receptionist",
+    path: "/reception",
     element: (
-      <ProtectedRoute allowedRoles={["receptionist"]}>
+      <ProtectedRoute allowedRoles={["reception"]}>
         <DashboardLayout />
       </ProtectedRoute>
     ),
