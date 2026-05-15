@@ -1,12 +1,13 @@
 // src/controllers/room.controller.js
 import { prisma } from "../utils/prisma.js";
 
-const VALID_STATUSES = ["available", "occupied", "maintenance"];
+const VALID_STATUSES = ["Available", "Occupied", "Cleaning", "Reserved"];
 
 // ─── Create Room ─────────────────────────────────────────────────────────────
 export const createRoom = async (req, res, next) => {
   try {
-    const { room_number, category, price_per_night, status } = req.body;
+    const { room_number, category, capacity, price_per_night, status } =
+      req.body;
 
     if (!room_number || !price_per_night) {
       return res
@@ -31,8 +32,9 @@ export const createRoom = async (req, res, next) => {
       data: {
         room_number,
         category: category || null,
+        capacity: capacity || null,
         price_per_night: Number(price_per_night),
-        status: status || "available",
+        status: status || "Available",
       },
     });
 
@@ -48,11 +50,12 @@ export const createRoom = async (req, res, next) => {
 // ─── Get All Rooms ───────────────────────────────────────────────────────────
 export const getAllRooms = async (req, res, next) => {
   try {
-    const { status, category } = req.query;
+    const { status, category, capacity } = req.query;
 
     const filters = {};
     if (status) filters.status = status;
     if (category) filters.category = category;
+    if (capacity) filters.capacity = Number(capacity);
 
     const rooms = await prisma.room.findMany({
       where: filters,
@@ -102,7 +105,8 @@ export const getRoomById = async (req, res, next) => {
 export const updateRoom = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { room_number, category, price_per_night, status } = req.body;
+    const { room_number, category, capacity, price_per_night, status } =
+      req.body;
 
     const existing = await prisma.room.findUnique({
       where: { room_id: Number(id) },
@@ -134,6 +138,7 @@ export const updateRoom = async (req, res, next) => {
       data: {
         room_number: room_number ?? existing.room_number,
         category: category ?? existing.category,
+        capacity: capacity ?? existing.capacity,
         price_per_night: price_per_night
           ? Number(price_per_night)
           : existing.price_per_night,

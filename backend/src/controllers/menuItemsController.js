@@ -4,26 +4,30 @@ import { prisma } from "../utils/prisma.js";
 // ─── Create Menu Item ─────────────────────────────────────────────────────────
 export const createMenuItem = async (req, res, next) => {
   try {
-    const { name, price, category_id } = req.body;
+    const { name, price, available_status, category_name } = req.body;
 
-    if (!name || !price || !category_id) {
+    if (!name || !price || !category_name) {
       return res
         .status(400)
-        .json({ message: "name, price and category_id are required" });
+        .json({ message: "name, price and category_name are required" });
     }
 
-    const category = await prisma.menuCategory.findUnique({
-      where: { category_id: Number(category_id) },
+    const category = await prisma.menuCategory.findFirst({
+      where: { name: category_name },
     });
+
     if (!category) {
-      return res.status(404).json({ message: "Menu category not found" });
+      return res
+        .status(404)
+        .json({ message: `Category '${category_name}' not found` });
     }
 
     const menuItem = await prisma.menuItem.create({
       data: {
         name,
         price: Number(price),
-        category: { connect: { category_id: Number(category_id) } },
+        available_status: available_status || "available",
+        category: { connect: { category_id: category.category_id } },
       },
       include: { category: true },
     });
@@ -94,7 +98,7 @@ export const getMenuItemById = async (req, res, next) => {
 export const updateMenuItem = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, category_id } = req.body;
+    const { name, price, available_status, category_id } = req.body;
 
     const existing = await prisma.menuItem.findUnique({
       where: { menu_item_id: Number(id) },
@@ -121,6 +125,7 @@ export const updateMenuItem = async (req, res, next) => {
         category: category_id
           ? { connect: { category_id: Number(category_id) } }
           : undefined,
+        available_status: available_status ?? existing.available_status,
       },
       include: { category: true },
     });

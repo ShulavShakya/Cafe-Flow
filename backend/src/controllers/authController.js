@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../utils/prisma.js";
 
 export const login = async (req, res, next) => {
+  console.log("LOGIN CONTROLLER HIT");
+
   try {
     const { email, password } = req.body;
 
@@ -68,12 +70,26 @@ export const login = async (req, res, next) => {
       },
     });
 
-    const { password: _, ...userWithoutPassword } = user;
+    console.log("Login success - setting cookies");
+
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    const { password: _, refresh_token, ...userWithoutPassword } = user;
 
     return res.status(200).json({
       message: "Login successful",
-      accessToken,
-      refreshToken,
       data: userWithoutPassword,
     });
   } catch (error) {
@@ -81,11 +97,18 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const logout = async (req, res, next) => {
+export const logout = async (req, res) => {
   try {
-    return res.status(200).json({ message: "Logged out successfully" });
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
+
+    return res.json({
+      message: "Logged out successfully",
+    });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: "Logout failed",
+    });
   }
 };
 
@@ -112,9 +135,9 @@ export const changePassword = async (req, res, next) => {
   }
 };
 
-export const refreshToken = async (req, res, next) => {
+export const refreshToken = async (req, res) => {
   try {
-    const { token } = req.body;
+    const token = req.cookies?.refresh_token;
 
     if (!token) {
       return res.status(401).json({ message: "No refresh token" });
@@ -133,15 +156,22 @@ export const refreshToken = async (req, res, next) => {
     const newAccessToken = jwt.sign(
       {
         user_id: user.user_id,
-        email: user.email,
-        role_name: user.role_id,
+        role: decoded.role,
+        email: decoded.email,
       },
       process.env.KEY,
       { expiresIn: "15m" },
     );
 
-    return res.json({ accessToken: newAccessToken });
+    res.cookie("access_token", newAccessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    return res.json({ message: "Token refreshed" });
   } catch (err) {
-    next(err);
+    return res.status(403).json({ message: "Refresh failed" });
   }
 };

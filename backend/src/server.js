@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import router from "./routes/indexRouter.js";
 import { prisma } from "./utils/prisma.js";
@@ -10,11 +11,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5051;
 
+app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    origin: "http://192.168.100.116:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   }),
 );
 

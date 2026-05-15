@@ -16,6 +16,7 @@ function LoginScreen() {
 
   // admin validation
   const handleLogin = async (e) => {
+    console.log("Handle Login called again");
     e.preventDefault();
 
     try {
@@ -25,9 +26,13 @@ function LoginScreen() {
       });
 
       const user = res.data.data;
+      console.log(user);
+      console.log("Response data", res.data);
+
+      console.log("Access_token", res.data.accessToken);
 
       Cookies.set("user", JSON.stringify(user));
-      Cookies.set("token", res.data.accessToken);
+      Cookies.set("access_token", res.data.accessToken);
 
       toast.success("Logged in Successfully");
 
@@ -35,7 +40,7 @@ function LoginScreen() {
 
       if (user.role.role_name === "admin") {
         navigate("/dashboard");
-      } else {
+      } else if (user){
         navigate(-1);
       }
     } catch (error) {

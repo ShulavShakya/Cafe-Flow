@@ -3,7 +3,7 @@ import { prisma } from "../utils/prisma.js";
 
 export const authenticateToken = async (req, res, next) => {
   try {
-    const token = req.cookies?.token;
+    const token = req.cookies?.access_token;
 
     if (!token) {
       return res.status(401).json({
@@ -16,10 +16,10 @@ export const authenticateToken = async (req, res, next) => {
 
     const user = await prisma.user.findUnique({
       where: {
-        id: decoded.id,
+        user_id: decoded.user_id,
       },
       select: {
-        id: true,
+        user_id: true,
         email: true,
         role: true,
       },
@@ -51,7 +51,7 @@ export const checkRole = (...allowedRoles) => {
       });
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
+    if (!allowedRoles.includes(req.user.role.role_name)) {
       return res.status(403).json({
         status: false,
         message: "Access denied",

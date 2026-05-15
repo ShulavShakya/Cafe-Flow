@@ -62,6 +62,7 @@ model Room {
   room_id           Int      @id @default(autoincrement())
   room_number       String   @unique
   category          String?
+  capacity          Int
   price_per_night   Float
   status            String   @default("available")
   created_at        DateTime @default(now())
@@ -104,6 +105,7 @@ model MenuItem {
   menu_item_id  Int      @id @default(autoincrement())
   name          String
   price         Float
+  available_status String   @default("available")
   category_id   Int
 
   category      MenuCategory @relation(fields: [category_id], references: [category_id])

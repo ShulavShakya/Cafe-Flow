@@ -72,8 +72,8 @@ function Signup() {
     if (password !== confirmPassword) {
       setMsg("Passwords do not match");
       return;
-    } 
-     
+    }
+
     //send data to backend
     resetForm();
   };
@@ -85,8 +85,10 @@ function Signup() {
         alt="image"
         className="w-full h-full object-cover absolute inset-0 blur-xs"
       />
-      <div className="backdrop-blur-3xl bg-white/10 border border-white/20 p-8 rounded-2xl 
-      overflow-y-auto max-h-screen shadow-lg w-100 text-center">
+      <div
+        className="backdrop-blur-3xl bg-white/10 border border-white/20 p-8 rounded-2xl 
+      overflow-y-auto max-h-screen shadow-lg w-100 text-center"
+      >
         <div className=" w-full text-start ">
           <div className="flex items-center justify-start gap-3 mb-5">
             <UserRoundPlus className="w-5 h-5 text-white" />
@@ -128,7 +130,7 @@ function Signup() {
             ))}
           </select>
 
-           <p className="mb-1 font-medium text-white">Phone*</p>
+          <p className="mb-1 font-medium text-white">Phone*</p>
           <input
             type="tel"
             placeholder="Eg: 9XXXXXXXXX"
@@ -179,7 +181,6 @@ function Signup() {
           <p className="mb-5 font-medium text-sm text-black">{msg}</p>
 
           <div className="flex justify-between items-center">
-
             <button
               onClick={resetForm}
               className="inline-flex w-20 h-9 px-4 py-3 text-[15px] font-medium items-center justify-center bg-transparent 
@@ -195,7 +196,6 @@ function Signup() {
             >
               Register
             </button>
-
           </div>
         </div>
       </div>

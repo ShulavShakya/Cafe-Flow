@@ -5,9 +5,9 @@ import logo from "../../assets/images/kitchen_pulse.png";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { publicAPI } from "../../auth/config/api";
+import { useAuth } from "../../auth/authContext.jsx";
 
 function LoginScreen() {
-  console.log("LoginScreen MOUNTED");
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -15,16 +15,24 @@ function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [msg, setMsg] = useState("");
 
+  const { login } = useAuth();
+
   // admin validation
   const handleLogin = async (e) => {
     console.log("Handle Login called");
     e.preventDefault();
 
     try {
-      const res = await publicAPI.post("/auth/login", {
-        email,
-        password,
-      });
+      const res = await publicAPI.post(
+        "/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
       // if (res.data.message === "Password change required") {
       //   toast.info("Password change required. Redirecting...");
@@ -34,18 +42,17 @@ function LoginScreen() {
       //   return;
       // }
 
-      const user = res.data.data;
-      console.log("Login response:", user);
+      // Run this once in browser console to nuke the stale cookie
 
-      Cookies.set("user", JSON.stringify(user));
-      Cookies.set("token", res.data.accessToken);
+      const user = res.data.data;
+
+      login({
+        userData: user,
+      });
 
       toast.success("Logged in Successfully");
 
       setMsg("");
-
-      console.log(res.data);
-      console.log(user);
 
       if (user?.role?.role_name === "admin") {
         navigate("/dashboard");
@@ -54,7 +61,6 @@ function LoginScreen() {
       }
     } catch (error) {
       console.error("Error:", error);
-
       toast.error("Login Failed");
       setMsg("Invalid credentials");
     }
