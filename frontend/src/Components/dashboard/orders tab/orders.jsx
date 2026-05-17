@@ -100,7 +100,7 @@ function OrdersView() {
       )}
 
       {/* kitchen View */}
-      {(role === "admin" || role === "kitchen") && (
+      {(role === "admin" || role === "kitchen") && view === "kitchen" && (
         <KitchenOrders
           kitchenOrders={kitchenOrders}
           changeStatus={changeStatus}
@@ -108,7 +108,7 @@ function OrdersView() {
       )}
 
       {/*waiter view */}
-      {(role === "admin" || role === "waiter") && (
+      {(role === "admin" || role === "waiter") && view === "waiter" && (
         <WaiterOrders
           waiterOrders={waiterOrders}
           setOrdersData={setOrdersData}
