@@ -1,4 +1,4 @@
-/* src / config / database.js; */
+/* src/config/database.js */
 import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import pkg from "@prisma/client";
@@ -12,7 +12,7 @@ export const createPrismaClient = () => {
     database: process.env.DATABASE_NAME,
     connectionLimit: 10,
     ssl: {
-      rejectUnauthorized: true, // ← only add this
+      rejectUnauthorized: false,
     },
   });
 
@@ -24,10 +24,3 @@ export const createPrismaClient = () => {
         : ["error"],
   });
 };
-
-/* const myql = require("mysql2");
-
-const urlDB = `mysql://root:ekyEyTaGyvWUxUbBlecQeSyVvxDyRrHg@mysql.railway.internal:3306/railway`;
-
-const connection = mysql.createConnection(urlDB);
-module.exports = connection; */

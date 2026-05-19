@@ -13,6 +13,13 @@ console.log("ENV CHECK:", {
   adminEmail: process.env.ADMIN_EMAIL,
 });
 
+try {
+  const { prisma } = await import("./utils/prisma.js");
+  console.log("✓ Prisma connected");
+} catch (err) {
+  console.error("✗ Prisma connection failed:", err.message);
+}
+
 const app = express();
 const PORT = process.env.PORT || 5051;
 
