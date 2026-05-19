@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import router from "./routes/indexRouter.js";
 import { prisma } from "./utils/prisma.js";
+import { createAdmin } from "../prisma/seed.js";
 
 dotenv.config();
 
@@ -32,7 +33,8 @@ app.get("/", (req, res) => {
 
 app.use(errorMiddleware);
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
+  await createAdmin();
   console.log(`Server running on port ${PORT}`);
   console.log(`Server available on http://localhost:${PORT}`);
 });

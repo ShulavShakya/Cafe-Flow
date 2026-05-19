@@ -54,6 +54,3 @@ export const createAdmin = async () => {
     await prisma.$disconnect();
   }
 };
-
-// Run seed
-createAdmin();
