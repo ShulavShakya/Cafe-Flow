@@ -1,6 +1,4 @@
 // prisma/seed.js
-import dotenv from "dotenv";
-dotenv.config();
 
 import { prisma } from "../src/utils/prisma.js";
 import bcrypt from "bcryptjs";
