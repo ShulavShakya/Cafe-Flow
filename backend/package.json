@@ -12,7 +12,7 @@
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "postinstall": "prisma generate",
-    "build": "prisma generate"
+    "build": "prisma generate && node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
