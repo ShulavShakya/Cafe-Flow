@@ -5,7 +5,7 @@ function NewItemForm({ close, categories }) {
   const [itemName, setItemName] = useState("");
   const [itemCategory, setItemCategory] = useState("");
   const [price, setPrice] = useState(0);
-  const [available_status, setAvailableStatus] = useState("available");
+  const [available_status, setAvailableStatus] = useState("Available");
   const [msg, setMsg] = useState("");
   const nameRegx = /^[a-zA-Z\s]+$/;
 
@@ -14,7 +14,7 @@ function NewItemForm({ close, categories }) {
     setItemName("");
     setItemCategory("");
     setPrice(0);
-    setAvailableStatus("available");
+    setAvailableStatus("Available");
     close();
   };
 
@@ -71,8 +71,8 @@ function NewItemForm({ close, categories }) {
             className="w-full mb-3 border rounded-xl p-2"
             required
           >
-            <option value="available">Available</option>
-            <option value="unavailable">Unavailable</option>
+            <option value="Available">Available</option>
+            <option value="Unavailable">Unavailable</option>
           </select>
 
           <p className="text-[17px] font-medium text-gray-600 mb-2">

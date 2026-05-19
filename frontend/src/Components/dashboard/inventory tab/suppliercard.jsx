@@ -72,7 +72,7 @@ function SupplierCard({ suppliers, deleteSupplier }) {
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
           <div className="bg-white p-7 rounded-xl shadow-lg text-center w-100 flex flex-col items-center justify-center">
             <p className="font-medium text-lg mb-6">
-              Do you want to remove supplier {selectedSupplier.name} from the
+              Do you want to remove supplier {supplier.supplier_name} from the
               system?
             </p>
             <div className="flex items-center justify-center gap-4">
