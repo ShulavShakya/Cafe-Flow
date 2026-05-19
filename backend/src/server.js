@@ -20,9 +20,11 @@ try {
   console.error("✗ Prisma connection failed:", err.message);
 }
 
+console.log("1 - importing middlewares...");
 const app = express();
 const PORT = process.env.PORT || 5051;
 
+console.log("2 - setting up app...");
 app.use(cookieParser());
 app.use(
   cors({
@@ -44,10 +46,13 @@ app.get("/", (req, res) => {
 
 app.use(errorMiddleware);
 
+console.log("3 - starting server...");
+
 const server = app.listen(PORT, async () => {
+  console.log("4 - Attempting to create admin");
   await createAdmin();
   console.log(`Server running on port ${PORT}`);
-  console.log(`Server available on http://localhost:${PORT}`);
+  // console.log(`Server available on http://localhost:${PORT}`);
 });
 
 server.on("error", (err) => {
