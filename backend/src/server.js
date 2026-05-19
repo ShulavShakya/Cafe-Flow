@@ -1,13 +1,10 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import router from "./routes/indexRouter.js";
 import { prisma } from "./utils/prisma.js";
 import { createAdmin } from "../prisma/seed.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5051;
