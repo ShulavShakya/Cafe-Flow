@@ -6,6 +6,13 @@ import router from "./routes/indexRouter.js";
 import { prisma } from "./utils/prisma.js";
 import { createAdmin } from "../prisma/seed.js";
 
+console.log("ENV CHECK:", {
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  db: process.env.DATABASE_NAME,
+  adminEmail: process.env.ADMIN_EMAIL,
+});
+
 const app = express();
 const PORT = process.env.PORT || 5051;
 
