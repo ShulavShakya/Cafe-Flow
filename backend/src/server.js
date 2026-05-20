@@ -28,7 +28,21 @@ console.log("2 - setting up app...");
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://cafe-flow-6qwzt0bno-saakiyeahs-projects.vercel.app",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow Postman/curl
+
+      const sanitized = origin.replace(/\/$/, ""); // strip trailing slash
+
+      const isAllowed =
+        sanitized === "https://cafe-flow-saakiyeahs-projects.vercel.app" || // production
+        /^https:\/\/cafe-flow-[a-z0-9]+-saakiyeahs-projects\.vercel\.app$/.test(
+          sanitized,
+        ); // any preview
+
+      isAllowed
+        ? callback(null, true)
+        : callback(new Error(`CORS blocked: ${origin}`));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
