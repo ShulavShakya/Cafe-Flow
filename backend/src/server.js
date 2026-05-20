@@ -28,7 +28,7 @@ console.log("2 - setting up app...");
 app.use(cookieParser());
 app.use(
   cors({
-    origin: " http://192.168.254.55:5173/",
+    origin: " https://cafe-flow-kohl.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
