@@ -33,8 +33,13 @@ app.use(
 
       const sanitized = origin.replace(/\/$/, ""); // strip trailing slash
 
+      const allowed = [
+        "https://cafe-flow-kohl.vercel.app", // ← add this
+        "https://cafe-flow-saakiyeahs-projects.vercel.app", // production
+      ];
+
       const isAllowed =
-        sanitized === "https://cafe-flow-kohl.vercel.app/" || // production
+        allowed.includes(sanitized) ||
         /^https:\/\/cafe-flow-[a-z0-9]+-saakiyeahs-projects\.vercel\.app$/.test(
           sanitized,
         ); // any preview
