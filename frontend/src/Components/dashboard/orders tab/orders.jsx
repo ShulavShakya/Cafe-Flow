@@ -1,9 +1,9 @@
-/* admin view of orders */
+/* admin/waiter/kitchen view of orders */
+
 import { useEffect, useState } from "react";
 import KitchenOrders from "./kitchenorders";
 import WaiterOrders from "./waiterorders";
 import { useOrders } from "../../../hooks/useorder";
-import Cookies from "js-cookie";
 import { useAuth } from "../../../auth/authContext";
 
 function OrdersView() {
@@ -16,21 +16,43 @@ function OrdersView() {
     setOrdersData,
   } = useOrders();
 
-  //on cancel just give an alert and delete order
-  const [view, setView] = useState("kitchen"); //kitchen or waiter
   const { user } = useAuth();
   const role = user?.role?.role_name;
 
+  // default view
+  const [view, setView] = useState("kitchen");
+
+  // set view automatically based on role
+  useEffect(() => {
+    if (role === "waiter") {
+      setView("waiter");
+    }
+
+    if (role === "kitchen") {
+      setView("kitchen");
+    }
+  }, [role]);
+
+  // fetch orders
   useEffect(() => {
     fetchOrders();
   }, []);
 
+  // waiter orders
   const waiterOrders = ordersData.filter(
-    (o) => o.status === "preparing" || o.status === "prepared",
+    (o) =>
+      o.status?.toLowerCase() === "preparing" ||
+      o.status?.toLowerCase() === "prepared",
   );
 
-  const deliveredOrders = ordersData.filter((o) => o.status === "delivered");
-  const cancelledOrders = ordersData.filter((o) => o.status === "cancelled");
+  // stats
+  const deliveredOrders = ordersData.filter(
+    (o) => o.status?.toLowerCase() === "delivered",
+  );
+
+  const cancelledOrders = ordersData.filter(
+    (o) => o.status?.toLowerCase() === "cancelled",
+  );
 
   return (
     <div className="flex-1 min-h-screen bg-gray-50 p-8">
@@ -43,13 +65,14 @@ function OrdersView() {
         </p>
       </div>
 
-      {/* View Selection */}
+      {/* Admin controls */}
       {role === "admin" && (
         <div>
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-4 rounded-lg font-medium shadow-sm">
               <p className="text-gray-700 text-[17px] mb-1">Pending orders</p>
+
               <p className="text-gray-900 text-[17px]">
                 {kitchenOrders.length}
               </p>
@@ -57,6 +80,7 @@ function OrdersView() {
 
             <div className="bg-blue-50 p-4 rounded-lg font-medium shadow-sm">
               <p className="text-blue-700 text-[17px] mb-1">Delivered orders</p>
+
               <p className="text-blue-900 text-[17px]">
                 {deliveredOrders.length}
               </p>
@@ -66,6 +90,7 @@ function OrdersView() {
               <p className="text-green-700 text-[17px] mb-1">
                 Completed orders
               </p>
+
               <p className="text-green-900 text-[17px]">
                 {completedOrders.length}
               </p>
@@ -73,17 +98,23 @@ function OrdersView() {
 
             <div className="bg-red-50 p-4 rounded-lg font-medium shadow-sm">
               <p className="text-red-700 text-[17px] mb-1">Cancelled orders</p>
+
               <p className="text-red-900 text-[17px]">
                 {cancelledOrders.length}
               </p>
             </div>
           </div>
 
+          {/* View Switch */}
           <div className="flex items-center gap-5 w-50 md:w-100 mb-6">
             <button
               onClick={() => setView("kitchen")}
               className={`px-8 py-3 rounded-2xl shadow-sm border border-slate-200 text-[15px] md:text-lg font-medium
-            ${view === "kitchen" ? "bg-blue-100 border-blue-200" : "bg-white hover:bg-gray-200"}`}
+              ${
+                view === "kitchen"
+                  ? "bg-blue-100 border-blue-200"
+                  : "bg-white hover:bg-gray-200"
+              }`}
             >
               Kitchen
             </button>
@@ -91,7 +122,11 @@ function OrdersView() {
             <button
               onClick={() => setView("waiter")}
               className={`px-8 py-3 rounded-2xl shadow-sm border border-slate-200 text-[15px] md:text-lg font-medium
-            ${view === "waiter" ? "bg-blue-100 border-blue-200" : "bg-white hover:bg-gray-200"}`}
+              ${
+                view === "waiter"
+                  ? "bg-blue-100 border-blue-200"
+                  : "bg-white hover:bg-gray-200"
+              }`}
             >
               Waiter
             </button>
@@ -99,7 +134,7 @@ function OrdersView() {
         </div>
       )}
 
-      {/* kitchen View */}
+      {/* Kitchen View */}
       {(role === "admin" || role === "kitchen") && view === "kitchen" && (
         <KitchenOrders
           kitchenOrders={kitchenOrders}
@@ -107,7 +142,7 @@ function OrdersView() {
         />
       )}
 
-      {/*waiter view */}
+      {/* Waiter View */}
       {(role === "admin" || role === "waiter") && view === "waiter" && (
         <WaiterOrders
           waiterOrders={waiterOrders}
