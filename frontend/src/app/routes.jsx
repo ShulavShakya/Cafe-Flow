@@ -26,7 +26,7 @@ export default [
   {
     path: "/admin",
     element: (
-      <ProtectedRoute allowedRoles={["admin"]}>
+      <ProtectedRoute allowedRoles={["admin" && "manager"]}>
         <DashboardLayout />
       </ProtectedRoute>
     ),
