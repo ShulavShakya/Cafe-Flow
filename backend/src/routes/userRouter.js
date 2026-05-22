@@ -12,21 +12,29 @@ import {
 
 const router = express.Router();
 
-router.post("/add-staff", [authenticateToken, checkRole("admin")], addStaff);
-router.get("/get-staff", [authenticateToken, checkRole("admin")], getStaff);
+router.post(
+  "/add-staff",
+  [authenticateToken, checkRole("admin", "manager")],
+  addStaff,
+);
+router.get(
+  "/get-staff",
+  [authenticateToken, checkRole("admin", "manager")],
+  getStaff,
+);
 router.delete(
   "/delete-staff/:id",
-  [authenticateToken, checkRole("admin")],
+  [authenticateToken, checkRole("admin", "manager")],
   deleteStaff,
 );
 router.put(
   "/update-salary/:id",
-  [authenticateToken, checkRole("admin")],
+  [authenticateToken, checkRole("admin", "manager")],
   updateSalary,
 );
 router.put(
   "/update-staff/:id",
-  [authenticateToken, checkRole("admin")],
+  [authenticateToken, checkRole("admin", "manager")],
   updateStaff,
 );
 
