@@ -11,7 +11,7 @@ function TableOrderBill({ selectedOrder, close, completeTableOrders }) {
   const [discount, setDiscount] = useState(0);
   const [confirmPayment, setConfirmPayment] = useState(false);
 
-  const { tables, fetchTables, changeTableStatus } = useTables();
+  const { changeTableStatus } = useTables();
   const { user } = useAuth();
   //MERGE ITEMS
   const merged = {};
@@ -40,7 +40,6 @@ function TableOrderBill({ selectedOrder, close, completeTableOrders }) {
   const handlePayment = () => {
     window.print();
     setConfirmPayment(true);
-    // changeTableStatus(tables.table_id, "Available");
   };
 
   //_______save bill_______
@@ -50,12 +49,19 @@ function TableOrderBill({ selectedOrder, close, completeTableOrders }) {
       await privateAPI.post("/billing", {
         bill_type: "TABLE",
         generated_by_user_id: user.user_id,
-        table_reservation_id: tableId,
+
+        table_number: tableId,
+
+        customer_name: "Walk-in Customer",
+
         payment_method: paymentMethod,
-        subtotal,
+
         food_charges: subtotal,
+
         discount_amount: discountAmount,
+
         total_amount: finalAmount,
+
         bill_status: "PAID",
       });
     } catch (error) {

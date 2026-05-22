@@ -125,7 +125,7 @@ function TablePayment({ tablePayments }) {
 
       {showFilter && (
         <Filter
-          data={Payments}
+          data={payments}
           nameField="customer_name"
           dateField="paid_at"
           onApply={setFilteredData}

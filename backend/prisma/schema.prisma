@@ -186,6 +186,9 @@ model Billing {
   table_reservation_id Int?
   food_order_id  Int?
 
+  table_number Int?
+  customer_name String?
+  payment_method String?
   generated_by_user_id Int
 
   bill_status    BillStatus @default(PENDING)
