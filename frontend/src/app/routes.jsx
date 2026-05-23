@@ -30,6 +30,53 @@ export default [
         <DashboardLayout />
       </ProtectedRoute>
     ),
+    children: [
+      { index: true, element: <Overview /> },
+      {
+        path: "overview",
+        element: <Overview />,
+      },
+      {
+        path: "orders",
+        element: <OrdersView />,
+      },
+      {
+        path: "menu",
+        element: <MenuView />,
+      },
+      {
+        path: "tables",
+        element: <Tables />,
+      },
+      {
+        path: "rooms",
+        element: <Rooms />,
+      },
+      {
+        path: "staff",
+        element: <Staff />,
+      },
+      {
+        path: "inventory",
+        element: <Inventory />,
+      },
+      {
+        path: "finance",
+        element: <Finance />,
+      },
+      {
+        path: "reservations",
+        element: <Reservations />,
+      },
+      {
+        path: "history",
+        element: <History />,
+      },
+    ],
+  },
+
+  //manager route
+  {
     path: "/manager",
     element: (
       <ProtectedRoute allowedRoles={["manager"]}>
