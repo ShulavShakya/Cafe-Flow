@@ -13,13 +13,15 @@ export const privateAPI = axios.create({
 
 privateAPI.interceptors.response.use(
   (response) => response,
+
   async (error) => {
     const originalRequest = error.config;
+    const url = originalRequest?.url || "";
 
     if (
       originalRequest._retry ||
-      originalRequest.url.includes("/auth/refresh") ||
-      originalRequest.url.includes("/auth/login")
+      url.includes("/auth/refresh") ||
+      url.includes("/auth/login")
     ) {
       return Promise.reject(error);
     }
@@ -31,11 +33,14 @@ privateAPI.interceptors.response.use(
         await axios.post(
           `${BASE_URL}/auth/refresh`,
           {},
-          { withCredentials: true },
+          {
+            withCredentials: true,
+          },
         );
+
         return privateAPI(originalRequest);
-      } catch {
-        return Promise.reject(error); // ← just reject, don't redirect
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
       }
     }
 
