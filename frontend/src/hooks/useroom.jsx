@@ -54,7 +54,7 @@ export function useRooms() {
 
   const assignRoom = async (id, details) => {
     try {
-      await privateAPI.post(`/room-reservations/${id}/assign`, details);
+      await privateAPI.patch(`/room-reservations/${id}/assign`, details);
       fetchRooms();
     } catch (err) {
       console.error("Failed to assign room:", err);
