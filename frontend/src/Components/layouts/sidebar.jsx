@@ -99,13 +99,13 @@ function AdminDashboard({ open, setOpen }) {
             <NavLink
               key={item.id}
               onClick={() => setOpen(false)}
-              to={`/${role}/${item.id.toLowerCase().trim()}`}
-              end={item.id === "overview"} // for dashboard root
+              to={`/admin/${item.id.toLowerCase().trim()}`}
+              end={item.id === "overview"}
               className={({ isActive }) =>
                 `w-full flex items-center gap-3 p-3 rounded-lg transition ${
                   isActive
-                    ? "bg-red-500 font-medium text-[16px]  text-white"
-                    : "text-gray-900 font-medium text-[16px]  hover:bg-red-100"
+                    ? "bg-red-500 font-medium text-[16px] text-white"
+                    : "text-gray-900 font-medium text-[16px] hover:bg-red-100"
                 }`
               }
             >

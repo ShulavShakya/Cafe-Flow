@@ -29,7 +29,15 @@ function OrderCard({ order, view, changeStatus, openTableBill }) {
             </p>
           </div>
           <div className="text-right">
-            <p className="opacity-90 text-sm">{order.date}</p>
+            <p className="opacity-90 text-sm">
+              {new Date(order.createdAt).toLocaleString("en-IN", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
             <p className="text-sm">{order.guest?.full_name}</p>
           </div>
         </div>
