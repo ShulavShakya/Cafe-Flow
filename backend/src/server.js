@@ -30,12 +30,12 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow Postman/curl
+      if (!origin) return callback(null, true); 
 
       const sanitized = origin.replace(/\/$/, ""); // strip trailing slash
 
       const allowed = [
-        "https://cafe-flow-kohl.vercel.app", // ← add this
+        "https://cafe-flow-kohl.vercel.app", 
         "https://cafe-flow-saakiyeahs-projects.vercel.app", // production
       ];
 
@@ -43,7 +43,7 @@ app.use(
         allowed.includes(sanitized) ||
         /^https:\/\/cafe-flow-[a-z0-9]+-saakiyeahs-projects\.vercel\.app$/.test(
           sanitized,
-        ); // any preview
+        ); 
 
       isAllowed
         ? callback(null, true)

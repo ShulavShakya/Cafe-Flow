@@ -1,4 +1,4 @@
-import router from "express";
+import express from "express";
 import {
   assignRoom,
   getAllReservations,
@@ -11,7 +11,7 @@ import {
   checkRole,
 } from "../middlewares/auth.Middleware.js";
 
-const roomReservationRouter = router.Router();
+const roomReservationRouter = express.Router();
 
 roomReservationRouter.post(
   "/:id/create",
