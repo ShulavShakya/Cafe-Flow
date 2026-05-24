@@ -46,13 +46,16 @@ function TableOrderBill({ selectedOrder, close, completeTableOrders }) {
 
   const saveBill = async (tableId) => {
     try {
-      await privateAPI.post("/billing", {
-        bill_type: "TABLE",
+      const res = await privateAPI.post("/billing", {
+        bill_type: "Table",
         generated_by_user_id: user.user_id,
 
-        table_number: tableId,
+        table_reservation_id:
+          selectedOrder.table_reservation?.table_reservation_id || null,
 
-        customer_name: "Walk-in Customer",
+        table_number: selectedOrder.tableNumber,
+
+        customer_name: selectedOrder.guest?.full_name || "Walk-in Customer",
 
         payment_method: paymentMethod,
 
@@ -63,7 +66,10 @@ function TableOrderBill({ selectedOrder, close, completeTableOrders }) {
         total_amount: finalAmount,
 
         bill_status: "PAID",
+
+        table_ids: [tableId],
       });
+      console.log("BILL SAVED:", res.data); // ✅ check what comes back
     } catch (error) {
       console.log(error);
     }
