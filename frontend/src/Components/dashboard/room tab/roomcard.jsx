@@ -1,14 +1,25 @@
 import { X, DoorClosed, DoorClosedLocked, DoorOpen } from "lucide-react";
 import { useState, useRef } from "react";
 import Bill from "./roombillmodel";
+import { privateAPI } from "../../../auth/config/api";
 
 function RoomCard({ rooms, deleteRoom, selectedRoom }) {
   const [deletePopUp, setDeletePopUp] = useState(null);
   const [confirmation, setConfirmation] = useState(null);
   const [billModal, setBillModal] = useState(null);
   const [activeInfo, setActiveInfo] = useState(null);
+  const [billReservation, setBillReservation] = useState(null);
   const pressTimer = useRef(null);
   const hideTimer = useRef(null);
+
+  const fetchRoomReservation = async (roomId) => {
+    try {
+      const res = await privateAPI.get(`/room-reservations/${roomId}`);
+      setBillReservation(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex flex-wrap gap-5">
@@ -178,7 +189,8 @@ function RoomCard({ rooms, deleteRoom, selectedRoom }) {
 
             <div className="flex items-center gap-6">
               <button
-                onClick={() => {
+                onClick={async () => {
+                  await fetchRoomReservation(confirmation.room_id);
                   setBillModal(confirmation);
                   setConfirmation(null);
                 }}
@@ -199,7 +211,11 @@ function RoomCard({ rooms, deleteRoom, selectedRoom }) {
       )}
 
       {billModal && (
-        <Bill checkedOutRoom={billModal} close={() => setBillModal(null)} />
+        <Bill
+          checkedOutRoom={billModal}
+          reservation={billReservation}
+          close={() => setBillModal(null)}
+        />
       )}
     </div>
   );

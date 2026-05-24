@@ -6,9 +6,8 @@ import { privateAPI } from "../../../auth/config/api";
 function RoomStatusForm({ room, changeRoomStatus, close }) {
   const [status, setStatus] = useState(room.status);
   const [customerName, setCustomerName] = useState("");
-  const [guestArrivalDate, setGuestArrivalDate] = useState(null);
-  const [guestArrivalTime, setGuestArrivalTime] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const [numberOfGuest, setNumberOfGuest] = useState("");
   const [msg, setMsg] = useState("");
 
   const nameRegex = /^[a-zA-Z\s]+$/;
@@ -18,20 +17,13 @@ function RoomStatusForm({ room, changeRoomStatus, close }) {
     setMsg("");
     setCustomerName("");
     setStatus(room.status);
-    setGuestArrivalDate(null);
-    setGuestArrivalTime("");
     setContactNumber("");
     close();
   };
 
   const handleSubmit = async () => {
     if (status === "Occupied") {
-      if (
-        !customerName.trim() ||
-        !guestArrivalDate ||
-        !contactNumber ||
-        !guestArrivalTime
-      ) {
+      if (!customerName.trim() || !contactNumber) {
         setMsg("All fields are required");
         return;
       }
@@ -45,10 +37,21 @@ function RoomStatusForm({ room, changeRoomStatus, close }) {
         setMsg("Invalid contact number");
         return;
       }
+
+      if (Number(numberOfGuest) > Number(room.capacity)) {
+        setMsg("Number of Guests exceeds the capacity");
+        return;
+      }
     }
 
     try {
-      await changeRoomStatus(room.room_id, status);
+      await changeRoomStatus(
+        room.room_id,
+        status,
+        customerName,
+        contactNumber,
+        numberOfGuest,
+      );
       resetForm();
       close();
     } catch (error) {
@@ -116,6 +119,15 @@ function RoomStatusForm({ room, changeRoomStatus, close }) {
               className="border-2 p-2 mt-2 mb-3 rounded-lg w-full"
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
+            />
+
+            <p className="font-medium ">Number of Guests:</p>
+            <input
+              type="text"
+              placeholder="1"
+              className="border-2 p-2 mt-2 mb-3 rounded-lg w-full"
+              value={numberOfGuest}
+              onChange={(e) => setNumberOfGuest(e.target.value)}
             />
 
             <p className="text-red-500 font-medium text-sm mt-2">{msg}</p>

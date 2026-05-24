@@ -1,7 +1,7 @@
 import { SlidersHorizontal, ReceiptText } from "lucide-react";
 import Filter from "../../layouts/filter";
 import { useState, useEffect } from "react";
-import { privateAPI } from "../../../auth/config/api";
+import { privateAPI } from "../../../auth/config/api.js";
 
 function TablePayment({ tablePayments }) {
   const [showFilter, setShowFilter] = useState(false);
@@ -16,9 +16,10 @@ function TablePayment({ tablePayments }) {
   const fetchPayments = async () => {
     try {
       const res = await privateAPI.get("/billing");
+      const tableBills = res.data.data.filter((b) => b.bill_type === "Table");
 
-      setPayments(res.data.bills);
-      setFilteredData(res.data.bills);
+      setPayments(tableBills);
+      setFilteredData(tableBills);
     } catch (error) {
       console.log(error);
     } finally {
@@ -113,7 +114,7 @@ function TablePayment({ tablePayments }) {
                     </td>
 
                     <td className="px-6 py-3 text-gray-600 text-sm">
-                      {new Date(tablePayRec.paid_at).toLocaleDateString()}
+                      {new Date(tablePayRec.created_at).toLocaleDateString()}
                     </td>
                   </tr>
                 ))}
@@ -127,7 +128,7 @@ function TablePayment({ tablePayments }) {
         <Filter
           data={payments}
           nameField="customer_name"
-          dateField="paid_at"
+          dateField="created_at"
           onApply={setFilteredData}
           onReset={() => setShowFilter(false)}
         />
