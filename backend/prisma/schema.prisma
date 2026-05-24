@@ -70,6 +70,7 @@ model Room {
   created_at        DateTime @default(now())
 
   room_reservations RoomReservation[]
+  billings Billing[]
 }
 
 model RoomReservation {
@@ -78,7 +79,7 @@ model RoomReservation {
   room_id        Int
   guest_count     Int?
   check_in_date  DateTime
-  check_in_time  String
+  check_in_time  DateTime
   check_out_date   DateTime?
   status         String   @default("active")
   type           String   @default("reservation") 
@@ -187,6 +188,7 @@ model Billing {
   food_order_id  Int?
 
   table_number Int?
+  room_number Int?
   customer_name String?
   payment_method String?
   generated_by_user_id Int
@@ -211,6 +213,8 @@ model Billing {
   payments    Payment[]
 
   tables Table[]
+
+  rooms Room[]
 
   guests Guest[]
 }
@@ -238,6 +242,7 @@ model Payment {
 enum BillType {
   Food
   Room
+  Table
   Combined
 }
 
