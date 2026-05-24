@@ -178,13 +178,11 @@ export const deleteRoom = async (req, res, next) => {
 export const occupyRoom = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { guest_name, phone, guest_count, check_in_date, check_in_time } =
-      req.body;
+    const { guest_name, phone, guest_count } = req.body;
 
-    if (!guest_name || !guest_count || !check_in_date || !check_in_time) {
+    if (!guest_name) {
       return res.status(400).json({
-        message:
-          "guest_name, guest_count, check_in_date and check_in_time are required",
+        message: "guest_name are required",
       });
     }
 
@@ -196,7 +194,7 @@ export const occupyRoom = async (req, res, next) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    if (room.status !== "available") {
+    if (room.status !== "Available") {
       return res.status(400).json({
         message: `Room is currently ${room.status} and cannot be occupied`,
       });
@@ -223,12 +221,13 @@ export const occupyRoom = async (req, res, next) => {
         });
       }
 
+      const now = new Date();
       const reservation = await tx.roomReservation.create({
         data: {
           guest_count: Number(guest_count),
-          check_in_date: new Date(check_in_date),
-          check_in_time,
-          status: "active", // walk-in is checked in immediately
+          check_in_date: now,
+          check_in_time: now,
+          status: "checked_in", // walk-in is checked in immediately
           type: "walk_in",
           guest: { connect: { guest_id: guest.guest_id } },
           room: { connect: { room_id: Number(id) } },

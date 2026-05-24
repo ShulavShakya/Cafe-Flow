@@ -5,6 +5,7 @@ import {
   getRoomById,
   updateRoom,
   deleteRoom,
+  occupyRoom,
 } from "../controllers/roomsController.js";
 import {
   authenticateToken,
@@ -18,5 +19,6 @@ roomRouter.get("/", authenticateToken, getAllRooms);
 roomRouter.get("/:id", authenticateToken, getRoomById);
 roomRouter.put("/:id", authenticateToken, updateRoom);
 roomRouter.delete("/:id", authenticateToken, deleteRoom);
+roomRouter.patch("/:id/occupy", authenticateToken, occupyRoom);
 
 export default roomRouter;
