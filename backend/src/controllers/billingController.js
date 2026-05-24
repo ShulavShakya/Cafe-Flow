@@ -3,6 +3,10 @@ import { prisma } from "../utils/prisma.js";
 export const createBilling = async (req, res) => {
   try {
     const {
+      customer_name,
+      payment_method,
+      table_number,
+      room_number,
       bill_type,
       room_reservation_id,
       table_reservation_id,
@@ -15,6 +19,7 @@ export const createBilling = async (req, res) => {
       discount_amount,
       total_amount,
       table_ids,
+      room_ids,
       guest_ids,
     } = req.body;
 
@@ -29,6 +34,14 @@ export const createBilling = async (req, res) => {
 
     const billing = await prisma.billing.create({
       data: {
+        customer_name: customer_name || null,
+
+        payment_method: payment_method || null,
+
+        table_number: Number(table_number) || null,
+
+        room_number: Number(room_number) || null,
+
         bill_type,
 
         room_reservation_id: room_reservation_id || null,
@@ -52,7 +65,15 @@ export const createBilling = async (req, res) => {
         tables: table_ids?.length
           ? {
               connect: table_ids.map((id) => ({
-                table_id: id,
+                table_id: Number(id),
+              })),
+            }
+          : undefined,
+
+        rooms: room_ids?.length
+          ? {
+              connect: room_ids.map((id) => ({
+                room_id: Number(id),
               })),
             }
           : undefined,
@@ -74,6 +95,7 @@ export const createBilling = async (req, res) => {
         generated_by: true,
         payments: true,
         tables: true,
+        rooms: true,
         guests: true,
       },
     });
@@ -107,6 +129,7 @@ export const getAllBillings = async (req, res) => {
         generated_by: true,
         payments: true,
         tables: true,
+        rooms: true,
         guests: true,
       },
 
@@ -150,6 +173,7 @@ export const getBillingById = async (req, res) => {
         generated_by: true,
         payments: true,
         tables: true,
+        rooms: true,
         guests: true,
       },
     });
